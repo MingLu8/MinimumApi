@@ -1,5 +1,7 @@
 # Code Samples for MinimumApi
-- Route setup
+- Route Setup
 - Swagger
 - Cors
 - File Uploads
+- File Downloads
+- 

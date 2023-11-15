@@ -1,3 +1,6 @@
+
+using System.Text;
+
 namespace MinimimApi.Routers 
 {
     public class FileDownloadRouter : RouterBase 
@@ -14,7 +17,7 @@ namespace MinimimApi.Routers
         {
            app.MapGet($"{ResourceName}", () =>
             {
-                var barr =  File.ReadAllBytes("some content....");
+                var barr =  Encoding.ASCII.GetBytes("some content....");
                 return Results.File(barr, "text/txt", "some-content.txt");
             });
         }

@@ -12,6 +12,7 @@ builder.Services.AddCors();
 
 builder.Services.AddScoped<RouterBase, CustomerRouter>();
 builder.Services.AddScoped<RouterBase, FileUploadRouter>();
+builder.Services.AddScoped<RouterBase, FileDownloadRouter>();
 var app = builder.Build();
 //Use Cors need NuGet Package for it.
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()

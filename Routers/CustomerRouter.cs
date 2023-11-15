@@ -12,22 +12,13 @@ namespace MinimimApi.Routers
 
     public override void AddRoutes(WebApplication app)
     {
-        app.MapGet($"/{ResourceName}", () => Get());
-
-        app.MapGet($"/{ResourceName}/{{id:int}}",
-        (int id) => Get(id));
-
-        app.MapGet($"/{ResourceName}/{{name}}",
-       (string name) => GetByFirstName(name));
-
-        app.MapPost($"/{ResourceName}",
-        (Customer entity) => Post(entity));
-
-        app.MapPut($"/{ResourceName}/{{id:int}}",
-        (int id, Customer entity) => Put(id, entity));
-
-        app.MapDelete($"/{ResourceName}/{{id:int}}",
-       (int id) => Delete(id));
+        var customerRoutes = app.MapGroup(ResourceName);
+        customerRoutes.MapGet("/", () => Get());
+        customerRoutes.MapGet("/{id:int}", (int id) => Get(id));
+        customerRoutes.MapGet("/{name}", (string name) => GetByFirstName(name));
+        customerRoutes.MapPost("/", (Customer entity) => Post(entity));
+        customerRoutes.MapPut("/{id:int}", (int id, Customer entity) => Put(id, entity));
+        customerRoutes.MapDelete("/{id:int}", (int id) => Delete(id));
     }
 
     protected virtual IResult Get()

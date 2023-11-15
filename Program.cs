@@ -11,6 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
 builder.Services.AddScoped<RouterBase, CustomerRouter>();
+builder.Services.AddScoped<RouterBase, FileUploadRouter>();
 var app = builder.Build();
 //Use Cors need NuGet Package for it.
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
@@ -36,22 +37,5 @@ using (var scope = app.Services.CreateScope())
         item.AddRoutes(app);
     }
 }
-
-//file upload
-app.MapPost("/upload", async (IFormFile file) =>
-{
-    if (file is null)
-    {
-        return Results.BadRequest();
-    }
-
-    var uploads = Path.Combine(app.Environment.ContentRootPath, file.FileName);
-    await using var fileStream = File.OpenWrite(uploads);
-    await using var uploadStream = file.OpenReadStream();
-    await uploadStream.CopyToAsync(fileStream);
-
-    return Results.NoContent();
-})
-.Accepts<IFormFile>("multipart/form-data");
 
 app.Run();

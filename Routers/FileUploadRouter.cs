@@ -1,17 +1,21 @@
-using MinimimApi.Entities;
-
 namespace MinimimApi.Routers 
 {
     public class FileUploadRouter : RouterBase 
     {
-        public FileUploadRouter(ILogger<CustomerRouter> logger)
+    
+        public FileUploadRouter(ILogger<FileUploadRouter> logger)
         {
             ResourceName = "fileUploads";
             Logger = logger;
+
         }
 
-     public override void AddRoutes(WebApplication app)
+        public override void AddRoutes(WebApplication app)
         {
+            var uploadDir = $"{app.Environment.ContentRootPath}/uploads";
+            if(!Directory.Exists(uploadDir))
+                Directory.CreateDirectory(uploadDir);
+
             app.MapPost($"/{ResourceName}", async (IFormFile file) =>
             {
                 if (file is null)
@@ -19,7 +23,7 @@ namespace MinimimApi.Routers
                     return Results.BadRequest();
                 }
 
-                var uploads = Path.Combine(app.Environment.ContentRootPath, file.FileName);
+                var uploads = Path.Combine($"{app.Environment.ContentRootPath}/uploads", file.FileName);
                 await using var fileStream = File.OpenWrite(uploads);
                 await using var uploadStream = file.OpenReadStream();
                 await uploadStream.CopyToAsync(fileStream);

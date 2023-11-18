@@ -12,6 +12,12 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
 builder.Services.AddAuthentication().AddJwtBearer();
+builder.Services.AddAuthorizationBuilder()
+  .AddPolicy("admin_greetings", policy =>
+        policy
+            .RequireRole("admin")
+            .RequireClaim("scope", "greetings_api"));;
+
 builder.Services.AddScoped<RouterBase, CustomerRouter>();
 builder.Services.AddScoped<RouterBase, FileUploadRouter>();
 builder.Services.AddScoped<RouterBase, FileDownloadRouter>();
@@ -23,6 +29,8 @@ app.UseStatusCodePages();
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
 .WithOrigins("https://localhost:5296", "http://localhost:64714"));
 
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -44,10 +52,10 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-app.Map("/users/{id:int}", (int id) 
+app.MapGet("/users/{id:int}", (int id) 
     => id <= 0 ? Results.BadRequest() : Results.Ok(new {id}) );
 
-app.Map("/exception", () 
+app.MapGet("/exception", () 
     => { throw new InvalidOperationException("Sample Exception"); });
 
 

@@ -62,3 +62,10 @@
 /Users/minglu/_dev/MinimumApi/obj/Debug/net7.0/minimumApi.pdb
 /Users/minglu/_dev/MinimumApi/obj/Debug/net7.0/minimumApi.genruntimeconfig.cache
 /Users/minglu/_dev/MinimumApi/obj/Debug/net7.0/ref/minimumApi.dll
+/Users/minglu/_dev/MinimumApi/bin/Debug/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/minglu/_dev/MinimumApi/bin/Debug/net7.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/minglu/_dev/MinimumApi/bin/Debug/net7.0/Microsoft.IdentityModel.Logging.dll
+/Users/minglu/_dev/MinimumApi/bin/Debug/net7.0/Microsoft.IdentityModel.Protocols.dll
+/Users/minglu/_dev/MinimumApi/bin/Debug/net7.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/minglu/_dev/MinimumApi/bin/Debug/net7.0/Microsoft.IdentityModel.Tokens.dll
+/Users/minglu/_dev/MinimumApi/bin/Debug/net7.0/System.IdentityModel.Tokens.Jwt.dll

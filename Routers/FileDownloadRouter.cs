@@ -6,10 +6,8 @@ namespace MinimimApi.Routers
     public class FileDownloadRouter : RouterBase 
     {
     
-        public FileDownloadRouter(ILogger<FileUploadRouter> logger)
+        public FileDownloadRouter(ILogger<FileUploadRouter> logger): base("downloads", logger)
         {
-            ResourceName = "downloads";
-            Logger = logger;
 
         }
 

@@ -3,10 +3,8 @@ namespace MinimimApi.Routers
     public class FileUploadRouter : RouterBase 
     {
     
-        public FileUploadRouter(ILogger<FileUploadRouter> logger)
+        public FileUploadRouter(ILogger<FileUploadRouter> logger): base("uploads", logger)
         {
-            ResourceName = "uploads";
-            Logger = logger;
         }
 
         public override void AddRoutes(WebApplication app)

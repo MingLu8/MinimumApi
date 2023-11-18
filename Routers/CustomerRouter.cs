@@ -4,16 +4,14 @@ namespace MinimimApi.Routers
 {
     public class CustomerRouter : RouterBase 
     {
-        public CustomerRouter(ILogger<CustomerRouter> logger)
+        public CustomerRouter(ILogger<CustomerRouter> logger): base("customers", logger)
         {
-            ResourceName = "customer";
-            Logger = logger;
         }
 
     public override void AddRoutes(WebApplication app)
     {
         var customerRoutes = app.MapGroup(ResourceName);
-        customerRoutes.MapGet("/", () => Get());
+        customerRoutes.MapGet("/", () => Get()).RequireAuthorization("admin_greetings");
         customerRoutes.MapGet("/{id:int}", (int id) => Get(id));
         customerRoutes.MapGet("/{name}", (string name) => GetByFirstName(name));
         customerRoutes.MapPost("/", (Customer entity) => Post(entity));
@@ -23,7 +21,7 @@ namespace MinimimApi.Routers
 
     protected virtual IResult Get()
     {
-        Logger.LogInformation("Getting all customers");
+        Logger?.LogInformation("Getting all customers");
         return Results.Ok(GetAll());
     }
 

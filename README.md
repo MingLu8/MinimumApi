@@ -4,8 +4,10 @@
 - Cors *
 - File Uploads *
 - File Downloads *
-- OpenID Connect (OIDC)
+- Authentication
+- Authorization
 - JWT
+- OpenID Connect (OIDC)
 - Object List To CSV Download
 - Import CSV to Object List
 

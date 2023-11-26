@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using MinimimApi.Routers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,47 @@ builder.Services.AddProblemDetails();
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(
+    c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Version = "v1",
+            Title = "API",
+            Description = "QPIN API with ASP.NET Core 3.0",
+            Contact = new OpenApiContact()
+            {
+                Name = "Tafsir Dadeh Zarrin",
+                Url = new Uri("http://www.tdz.co.ir")
+            }
+        });
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.Http,
+            In = ParameterLocation.Header,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            Description = "JWT Authorization header using the Bearer scheme."
+        });
+
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    },
+                    In = ParameterLocation.Header,
+                },
+                new List<string>()
+            }
+        });
+
+    });
+
 
 builder.Services.AddCors();
 builder.Services.AddAuthentication().AddJwtBearer();
@@ -18,6 +59,7 @@ builder.Services.AddAuthorizationBuilder()
             .RequireRole("admin")
             .RequireClaim("scope", "greetings_api"));;
 
+builder.Services.AddScoped<RouterBase, AuthRouter>();
 builder.Services.AddScoped<RouterBase, CustomerRouter>();
 builder.Services.AddScoped<RouterBase, FileUploadRouter>();
 builder.Services.AddScoped<RouterBase, FileDownloadRouter>();

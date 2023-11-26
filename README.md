@@ -21,3 +21,5 @@
 - Import CSV to Object List
 - Unit Tests
 - Integraton Tests
+- Use Record type for Database object
+- Use Dapper or RepoDb

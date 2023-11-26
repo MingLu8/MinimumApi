@@ -14,8 +14,10 @@
   - then use `curl -i -H "Authorization: Bearer {token}" https://localhost:{port}/customers` to test the endpoint, remember to replace the token and port.
 - JWT *
 - Swagger JWT Authorization Integration *
+- Endpoint grouping *
 - Http Editor, .http files *
 - OpenID Connect (OIDC)
 - Object List To CSV Download
 - Import CSV to Object List
-
+- Unit Tests
+- Integraton Tests

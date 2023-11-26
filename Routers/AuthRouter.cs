@@ -14,6 +14,7 @@ namespace MinimimApi.Routers
 
         }
 
+        //using test user-jwts as defined in the appsetings.development.json file, "ValidIssuer": "dotnet-user-jwts"
         public override void AddRoutes(WebApplication app)
         {
             var authRoutes = app.MapGroup(ResourceName).WithTags(ResourceName);

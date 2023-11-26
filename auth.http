@@ -1,0 +1,31 @@
+@hostname=localhost
+@port=7273
+@baseUrl=https://{{hostname}}:{{port}}
+@contentType = application/json
+
+### Get Auth Token
+# @name authTokenRequest
+GET {{baseUrl}}/auth
+
+# named requests are not yet support in http editor.
+### Get Customers Request
+# @accessToken = {{authTokenRequest.response.body.$.accessToken}}
+# @name getCustomersRequest
+# GET {{baseUrl}}/customers
+# Authorization: Bearer {{accessToken}}
+
+### Login Request (responds with 'access_token' in JSON response body):
+# @name authPasswordRequest
+# POST {{baseUrl}}/auth/password
+# Content-Type: {{contentType}}
+
+# {
+#   "userName": "username",
+#   "password": "password"
+# }
+
+### Get Authenticated Request
+# @accessToken = {{authPasswordRequest.response.body.$.access_token}}
+# @name userProfileRequest
+# GET {{baseUrl}}/profile
+# Authorization: Bearer {{accessToken}}

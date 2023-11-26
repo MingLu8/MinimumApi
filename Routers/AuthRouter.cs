@@ -28,9 +28,10 @@ namespace MinimimApi.Routers
 
                 var output = proc.StandardOutput.ReadToEnd();
                 var tokenLabel = "Token: ";
-                var token = output.Substring(output.IndexOf(tokenLabel) + tokenLabel.Length).Replace("\r\n", "");
+                var accessToken = output.Substring(output.IndexOf(tokenLabel) + tokenLabel.Length).Replace("\r\n", "");
 
-                return TypedResults.Ok(token);
+                //return TypedResults.Ok(new { accessToken});
+                return TypedResults.Content(accessToken);
             });
         }
     }

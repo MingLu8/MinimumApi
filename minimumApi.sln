@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1704.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "minimumApi", "minimumApi.csproj", "{90EA0E37-039B-455A-B480-7708E6261380}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "minimumApi", "minimumApi.csproj", "{90EA0E37-039B-455A-B480-7708E6261380}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "https", "https", "{CF2C4CB3-BF62-4F97-AE33-3E5439D4997F}"
+	ProjectSection(SolutionItems) = preProject
+		auth.http = auth.http
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

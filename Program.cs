@@ -100,5 +100,4 @@ app.MapGet("/users/{id:int}", (int id)
 app.MapGet("/exception", () 
     => { throw new InvalidOperationException("Sample Exception"); });
 
-
 app.Run();

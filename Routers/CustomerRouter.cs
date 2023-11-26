@@ -10,7 +10,7 @@ namespace MinimimApi.Routers
 
     public override void AddRoutes(WebApplication app)
     {
-        var customerRoutes = app.MapGroup(ResourceName);
+            var customerRoutes = app.MapGroup(ResourceName).WithTags(ResourceName);
         customerRoutes.MapGet("/", () => Get()).RequireAuthorization("admin_greetings");
         customerRoutes.MapGet("/{id:int}", (int id) => Get(id));
         customerRoutes.MapGet("/{name}", (string name) => GetByFirstName(name));

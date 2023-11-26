@@ -16,7 +16,8 @@ namespace MinimimApi.Routers
 
         public override void AddRoutes(WebApplication app)
         {
-           app.MapGet($"{ResourceName}", () =>
+            var authRoutes = app.MapGroup(ResourceName).WithTags(ResourceName);
+            authRoutes.MapGet("/", () =>
             {
                 var authCommand = " user-jwts create --scope \"greetings_api\" --role \"admin\" ";
                 System.Diagnostics.Process proc = new System.Diagnostics.Process();

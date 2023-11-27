@@ -23,3 +23,6 @@
 - Integraton Tests
 - Use Record type for Database object
 - Use Dapper or RepoDb
+- Add docker file
+- Add CI/CD GitHub Action Integration 
+- Add Azure Appplication Insight Integration

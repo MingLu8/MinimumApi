@@ -1,4 +1,4 @@
-/.vs
-/bin
-/obj
+/src/.vs
 /.vscode
+/*/**/bin
+/*/**/obj

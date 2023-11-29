@@ -3,12 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34302.85
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "minimumApi", "minimumApi.csproj", "{90EA0E37-039B-455A-B480-7708E6261380}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimumApi", "MinimalApi\MinimumApi.csproj", "{90EA0E37-039B-455A-B480-7708E6261380}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "https", "https", "{CF2C4CB3-BF62-4F97-AE33-3E5439D4997F}"
 	ProjectSection(SolutionItems) = preProject
 		auth.http = auth.http
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.IntegrationTests", "MinimalApi.IntegrationTests\MinimalApi.IntegrationTests.csproj", "{4E01F739-19F4-4777-8F96-BCBD52B262AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,6 +22,10 @@ Global
 		{90EA0E37-039B-455A-B480-7708E6261380}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90EA0E37-039B-455A-B480-7708E6261380}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90EA0E37-039B-455A-B480-7708E6261380}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E01F739-19F4-4777-8F96-BCBD52B262AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E01F739-19F4-4777-8F96-BCBD52B262AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E01F739-19F4-4777-8F96-BCBD52B262AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E01F739-19F4-4777-8F96-BCBD52B262AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

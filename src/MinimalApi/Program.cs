@@ -59,6 +59,7 @@ builder.Services.AddAuthorizationBuilder()
             .RequireRole("admin")
             .RequireClaim("scope", "greetings_api"));;
 
+builder.Services.AddScoped<RouterBase, HealthCheckRouter>();
 builder.Services.AddScoped<RouterBase, AuthRouter>();
 builder.Services.AddScoped<RouterBase, CustomerRouter>();
 builder.Services.AddScoped<RouterBase, FileUploadRouter>();
@@ -101,3 +102,5 @@ app.MapGet("/exception", ()
     => { throw new InvalidOperationException("Sample Exception"); });
 
 app.Run();
+
+public partial class Program { }

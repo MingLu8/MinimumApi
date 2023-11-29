@@ -26,3 +26,5 @@
 - Add docker file
 - Add CI/CD GitHub Action Integration 
 - Add Azure Appplication Insight Integration
+- Parameter validation
+- Add Code Coverage

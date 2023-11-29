@@ -2,33 +2,33 @@ using MinimimApi.Entities;
 
 namespace MinimimApi.Routers 
 {
-    public class CustomerRouter : RouterBase 
+    public class CustomerRouter : RouterBase
     {
-        public CustomerRouter(ILogger<CustomerRouter> logger): base("customers", logger)
+        public CustomerRouter(ILogger<CustomerRouter> logger) : base("customers", logger)
         {
         }
 
-    public override void AddRoutes(WebApplication app)
-    {
+        public override void AddRoutes(WebApplication app)
+        {
             var customerRoutes = app.MapGroup(ResourceName).WithTags(ResourceName);
-        customerRoutes.MapGet("/", () => Get()).RequireAuthorization("admin_greetings");
-        customerRoutes.MapGet("/{id:int}", (int id) => Get(id));
-        customerRoutes.MapGet("/{name}", (string name) => GetByFirstName(name));
-        customerRoutes.MapPost("/", (Customer entity) => Post(entity));
-        customerRoutes.MapPut("/{id:int}", (int id, Customer entity) => Put(id, entity));
-        customerRoutes.MapDelete("/{id:int}", (int id) => Delete(id));
-    }
+            customerRoutes.MapGet("/", () => Get()).RequireAuthorization("admin_greetings");
+            customerRoutes.MapGet("/{id:int}", (int id) => Get(id));
+            customerRoutes.MapGet("/{name}", (string name) => GetByFirstName(name));
+            customerRoutes.MapPost("/", (Customer entity) => Post(entity));
+            customerRoutes.MapPut("/{id:int}", (int id, Customer entity) => Put(id, entity));
+            customerRoutes.MapDelete("/{id:int}", (int id) => Delete(id));
+        }
 
-    protected virtual IResult Get()
-    {
-        Logger?.LogInformation("Getting all customers");
-        return Results.Ok(GetAll());
-    }
+        protected virtual IResult Get()
+        {
+            Logger?.LogInformation("Getting all customers");
+            return Results.Ok(GetAll());
+        }
 
 
-    private List<Customer> GetAll()
-    {
-        return new List<Customer> {
+        private List<Customer> GetAll()
+        {
+            return new List<Customer> {
             new Customer {
                 CustomerID = 1,
                 FirstName = "Orlando",
@@ -65,45 +65,45 @@ namespace MinimimApi.Routers
                 EmailAddress = "lucy0@adventure-works.com",
                 }
             };
-    }
+        }
 
-    /// <summary>
-    /// GET a single row of data
-    /// </summary>
-    /// <returns>An IResult object</returns>
-    protected virtual IResult Get(int id)
-    {
-        // Locate a single row of data
-        Customer? current = GetAll()
-        .Find(c => c.CustomerID == id);
-        if (current != null)
+        /// <summary>
+        /// GET a single row of data
+        /// </summary>
+        /// <returns>An IResult object</returns>
+        protected virtual IResult Get(int id)
         {
-            return Results.Ok(current);
+            // Locate a single row of data
+            Customer? current = GetAll()
+            .Find(c => c.CustomerID == id);
+            if (current != null)
+            {
+                return Results.Ok(current);
+            }
+            else
+            {
+                return Results.NotFound();
+            }
         }
-        else
-        {
-            return Results.NotFound();
-        }
-    }
 
-    /// <summary>
-    /// GET a single row of data
-    /// </summary>
-    /// <returns>An IResult object</returns>
-    protected virtual IResult GetByFirstName(string name)
-    {
-        // Locate a single row of data
-        Customer? current = GetAll()
-        .Find(c => c.FirstName == name);
-        if (current != null)
+        /// <summary>
+        /// GET a single row of data
+        /// </summary>
+        /// <returns>An IResult object</returns>
+        protected virtual IResult GetByFirstName(string name)
         {
-            return Results.Ok(current);
+            // Locate a single row of data
+            Customer? current = GetAll()
+            .Find(c => c.FirstName == name);
+            if (current != null)
+            {
+                return Results.Ok(current);
+            }
+            else
+            {
+                return Results.NotFound();
+            }
         }
-        else
-        {
-            return Results.NotFound();
-        }
-    }
         /// <summary>
         /// INSERT new data
         /// </summary>

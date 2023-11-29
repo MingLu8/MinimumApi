@@ -9,7 +9,7 @@ namespace MinimimApi.Routers
     public class AuthRouter : RouterBase 
     {
     
-        public AuthRouter(ILogger<AuthRouter> logger): base("auth", logger)
+        public AuthRouter(ILogger<HealthCheckRouter> logger): base("auth", logger)
         {
 
         }

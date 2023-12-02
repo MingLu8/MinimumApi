@@ -21,7 +21,7 @@ namespace MinimumApi.Middlewares
                 await _next(context);
             }
             catch (Exception error)
-            {
+            {   
                 switch (error)
                 {
                     case ValidationException e:

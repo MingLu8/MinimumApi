@@ -6,18 +6,11 @@ using System.Text.Json.Nodes;
 
 namespace MinimimApi.Routers 
 {
-    public class HealthCheckRouter : RouterBase 
+    public static class HealthCheckRoutes
     {
-    
-        public HealthCheckRouter(ILogger<HealthCheckRouter> logger): base("health", logger)
+        public static void AddHealthCheckRoutes(this WebApplication app)
         {
-
-        }
-
-        public override void AddRoutes(WebApplication app)
-        {
-            var authRoutes = app.MapGroup(ResourceName).WithTags(ResourceName);
-            authRoutes.MapGet("/ping", () =>
+            app.MapGet("/ping", () =>
             {
 
                 return TypedResults.Ok(DateTime.Now);

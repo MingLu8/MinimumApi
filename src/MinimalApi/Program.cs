@@ -5,6 +5,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
 using MinimimApi.Routers;
 using MinimumApi.Middlewares;
+using MinimumApi.Repositories;
+using MinimumApi.Routes;
+using MinimumApi.Services;
 using RepoDb;
 using System.Data;
 
@@ -69,15 +72,11 @@ builder.Services.AddAuthorizationBuilder()
 
 var connectionString = builder.Configuration.GetConnectionString("minimalApi");
 builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
-builder.Services.AddScoped<RouterBase, HealthCheckRouter>();
-builder.Services.AddScoped<RouterBase, AuthRouter>();
-builder.Services.AddScoped<RouterBase, PersonRouter>();
-builder.Services.AddScoped<RouterBase, FileUploadRouter>();
-builder.Services.AddScoped<RouterBase, FileDownloadRouter>();
+builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 var app = builder.Build();
 
-//app.UseExceptionHandler();
 app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
@@ -97,15 +96,10 @@ if (app.Environment.IsDevelopment())
     //app.UseDeveloperExceptionPage();
 }
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider.GetServices<RouterBase>();
-    
-    foreach (var item in services)
-    {
-        item.AddRoutes(app);
-    }
-}
+app.AddPersonRoutes();
+app.AddHealthCheckRoutes();
+app.AddAuthRoutes();
+app.AddUploadRoutes();
 
 app.MapGet("/users/{id:int}", (int id) 
     => id <= 0 ? Results.BadRequest() : Results.Ok(new {id}) );

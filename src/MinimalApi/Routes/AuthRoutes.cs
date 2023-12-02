@@ -6,19 +6,11 @@ using System.Text.Json.Nodes;
 
 namespace MinimimApi.Routers 
 {
-    public class AuthRouter : RouterBase 
+    public static class AuthRoutes
     {
-    
-        public AuthRouter(ILogger<HealthCheckRouter> logger): base("auth", logger)
+        public static void AddAuthRoutes(this WebApplication app)
         {
-
-        }
-
-        //using test user-jwts as defined in the appsetings.development.json file, "ValidIssuer": "dotnet-user-jwts"
-        public override void AddRoutes(WebApplication app)
-        {
-            var authRoutes = app.MapGroup(ResourceName).WithTags(ResourceName);
-            authRoutes.MapGet("/", () =>
+            app.MapGet("/auth", () =>
             {
                 var authCommand = " user-jwts create --scope \"greetings_api\" --role \"admin\" ";
                 System.Diagnostics.Process proc = new System.Diagnostics.Process();
@@ -34,7 +26,7 @@ namespace MinimimApi.Routers
 
                 //return TypedResults.Ok(new { accessToken});
                 return TypedResults.Content(accessToken);
-            });
+            }).WithTags("auth");
         }
     }
 }

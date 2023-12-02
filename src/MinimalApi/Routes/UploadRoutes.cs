@@ -1,19 +1,14 @@
 namespace MinimimApi.Routers 
 {
-    public class FileUploadRouter : RouterBase 
+    public static class UploadRoutes
     {
-    
-        public FileUploadRouter(ILogger<FileUploadRouter> logger): base("uploads", logger)
-        {
-        }
-
-        public override void AddRoutes(WebApplication app)
+        public static void AddUploadRoutes(this WebApplication app)
         {
             var uploadDir = $"{app.Environment.ContentRootPath}/uploads";
             if(!Directory.Exists(uploadDir))
                 Directory.CreateDirectory(uploadDir);
 
-            app.MapPost($"/{ResourceName}", async (IFormFile file) =>
+            app.MapPost("uploads", async (IFormFile file) =>
             {
                 if (file is null)
                 {

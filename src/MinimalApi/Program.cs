@@ -4,6 +4,7 @@ using HotChocolate;
 using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
 using MinimimApi.Routers;
+using MinimumApi.Middlewares;
 using RepoDb;
 using System.Data;
 
@@ -70,15 +71,14 @@ var connectionString = builder.Configuration.GetConnectionString("minimalApi");
 builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
 builder.Services.AddScoped<RouterBase, HealthCheckRouter>();
 builder.Services.AddScoped<RouterBase, AuthRouter>();
-builder.Services.AddScoped<RouterBase, CustomerRouter>();
 builder.Services.AddScoped<RouterBase, PersonRouter>();
 builder.Services.AddScoped<RouterBase, FileUploadRouter>();
 builder.Services.AddScoped<RouterBase, FileDownloadRouter>();
 
 var app = builder.Build();
 
-app.UseExceptionHandler();
-
+//app.UseExceptionHandler();
+app.UseMiddleware<ErrorHandlerMiddleware>();
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
 
@@ -94,7 +94,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
+    //app.UseDeveloperExceptionPage();
 }
 
 using (var scope = app.Services.CreateScope())

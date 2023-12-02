@@ -49,14 +49,9 @@ namespace MinimimApi.Routers
         {          
             if(person.CreatedDateUtc == null)
                 person.CreatedDateUtc = DateTime.UtcNow;
-           
-                throw new Exception("dfadsfsa");
-                var id = dbConnection.Insert(person);
-                return Results.Created($"/{ResourceName}/{person.Id}", person);
-           
-                //dbConnection.Close();
-                //return Results.Problem(ex.Message);
-            
+
+            var id = dbConnection.Insert(person);
+            return Results.Created($"/{ResourceName}/{person.Id}", person);      
         }
 
         protected virtual IResult Put(IDbConnection dbConnection, int id, Person person)

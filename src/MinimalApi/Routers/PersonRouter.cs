@@ -4,83 +4,79 @@ using MinimumApi.Entities;
 using RepoDb;
 using System;
 using System.Data;
+using System.Data.Common;
 
 namespace MinimimApi.Routers 
 {
     public class PersonRouter : RouterBase
     {
-        private readonly IDbConnection _connection;
-
-        public PersonRouter(IDbConnection dbConnection, ILogger<PersonRouter> logger) : base("person", logger)
+        public PersonRouter(ILogger<PersonRouter> logger) : base("person", logger)
         {
-            _connection = dbConnection;
         }
 
         public override void AddRoutes(WebApplication app)
         {
             var customerRoutes = app.MapGroup(ResourceName).WithTags(ResourceName);
-            customerRoutes.MapGet("/", () => Get()).RequireAuthorization("admin_greetings");
-            customerRoutes.MapGet("/{id:int}", (int id) => Get(id));            
-            customerRoutes.MapGet("/{name}", (string name) => GetByName(name));
-            customerRoutes.MapPost("/", (IDbConnection connection, Person entity) => Post(connection, entity));
-            customerRoutes.MapPut("/{id:int}", (int id, Person entity) => Put(id, entity));
-            customerRoutes.MapDelete("/{id:int}", (int id) => Delete(id));
+            customerRoutes.MapGet("/", (IDbConnection dbConnection) => Get(dbConnection));
+            customerRoutes.MapGet("/{id:int}", (IDbConnection dbConnection, int id) => Get(dbConnection, id));            
+            customerRoutes.MapGet("/{name}", (IDbConnection dbConnection, string name) => GetByName(dbConnection, name));
+            customerRoutes.MapPost("/", (IDbConnection dbConnection, Person entity) => Post(dbConnection, entity));
+            customerRoutes.MapPut("/{id:int}", (IDbConnection dbConnection, int id, Person entity) => Put(dbConnection, id, entity));
+            customerRoutes.MapDelete("/{id:int}", (IDbConnection dbConnection, int id) => Delete(dbConnection, id));
         }
 
-        protected virtual IResult Get()
+        protected virtual IResult Get(IDbConnection dbConnection)
         {
             Logger?.LogInformation("Getting all people");
-            var people = _connection.QueryAll<Person>();
+            var people = dbConnection.QueryAll<Person>();
             return Results.Ok(people);
         }
 
 
-        protected virtual IResult Get(int id)
+        protected virtual IResult Get(IDbConnection dbConnection, int id)
         {
-            var person = _connection.Query<Person>(e => e.Id == id);
+            var person = dbConnection.Query<Person>(e => e.Id == id);
             return person == null ? Results.NotFound() : Results.Ok(person);
         }
 
-        protected virtual IResult GetByName(string name)
+        protected virtual IResult GetByName(IDbConnection dbConnection, string name)
         {
-            var person = _connection.Query<Person>(e => e.Name == name);
+            var person = dbConnection.Query<Person>(e => e.Name == name);
             return person == null ? Results.NotFound() : Results.Ok(person);
         }
        
-        protected virtual IResult Post(IDbConnection connection, Person person)
+        protected virtual IResult Post(IDbConnection dbConnection, Person person)
         {          
             if(person.CreatedDateUtc == null)
                 person.CreatedDateUtc = DateTime.UtcNow;
-            try
-            {
-                var id = connection.Insert(person);
+           
+                throw new Exception("dfadsfsa");
+                var id = dbConnection.Insert(person);
                 return Results.Created($"/{ResourceName}/{person.Id}", person);
-            }
-            catch (Exception ex)
-            {
-                connection.Close();
-                return Results.Problem(ex.Message);
-            }
+           
+                //dbConnection.Close();
+                //return Results.Problem(ex.Message);
+            
         }
 
-        protected virtual IResult Put(int id, Person person)
+        protected virtual IResult Put(IDbConnection dbConnection, int id, Person person)
         {
-            if (!_connection.Exists<Person>(a => a.Id == id)) 
+            if (!dbConnection.Exists<Person>(a => a.Id == id)) 
                 return Results.NotFound();
             
-            var rowsAffected = _connection.Update(person);
+            var rowsAffected = dbConnection.Update(person);
             if (rowsAffected == 0) 
                 Logger.LogWarning($"No person updated for id: {id}.");
 
             return Results.Ok(person);
         }
 
-        protected virtual IResult Delete(int id)
+        protected virtual IResult Delete(IDbConnection dbConnection, int id)
         {
-            if (!_connection.Exists<Person>(a => a.Id == id))
+            if (!dbConnection.Exists<Person>(a => a.Id == id))
                 return Results.NotFound();
 
-            var rowsAffected = _connection.Delete<Person>(id);
+            var rowsAffected = dbConnection.Delete<Person>(id);
             if (rowsAffected == 0)
                 Logger.LogWarning($"No person updated for id: {id}.");
 

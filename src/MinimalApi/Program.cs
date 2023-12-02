@@ -76,7 +76,9 @@ builder.Services.AddScoped<RouterBase, FileUploadRouter>();
 builder.Services.AddScoped<RouterBase, FileDownloadRouter>();
 
 var app = builder.Build();
+
 app.UseExceptionHandler();
+
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
 
@@ -92,17 +94,15 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseDeveloperExceptionPage();
 }
 
 using (var scope = app.Services.CreateScope())
 {
-    // Instance of services where you build all RouterBase classes
     var services = scope.ServiceProvider.GetServices<RouterBase>();
     
-    // Loop through each RouterBase class
     foreach (var item in services)
     {
-        // Invoke the AddRoutes() method for each RouterBase class
         item.AddRoutes(app);
     }
 }

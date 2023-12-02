@@ -12,7 +12,7 @@ namespace MinimimApi.Routers
         {
             var customerRoutes = app.MapGroup(ResourceName).WithTags(ResourceName);
             customerRoutes.MapGet("/", () => Get()).RequireAuthorization("admin_greetings");
-            customerRoutes.MapGet("/{id:int}", (int id) => Get(id));
+            customerRoutes.MapGet("/{id:int}", (int id) => Get(id));            
             customerRoutes.MapGet("/{name}", (string name) => GetByFirstName(name));
             customerRoutes.MapPost("/", (Customer entity) => Post(entity));
             customerRoutes.MapPut("/{id:int}", (int id, Customer entity) => Put(id, entity));

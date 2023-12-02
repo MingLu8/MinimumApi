@@ -10,7 +10,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "https", "https", "{CF2C4CB3
 		auth.http = auth.http
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.IntegrationTests", "MinimalApi.IntegrationTests\MinimalApi.IntegrationTests.csproj", "{4E01F739-19F4-4777-8F96-BCBD52B262AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalApi.IntegrationTests", "MinimalApi.IntegrationTests\MinimalApi.IntegrationTests.csproj", "{4E01F739-19F4-4777-8F96-BCBD52B262AA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{0C448DE0-710A-49C2-A974-BCA47C8150B3}"
+	ProjectSection(SolutionItems) = preProject
+		baseline.sql = baseline.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -22,7 +22,7 @@
 - Unit Tests
 - Integraton Tests
 - Use Record type for Database object
-- Use Dapper or RepoDb
+- Use Dapper or RepoDb (https://repodb.net/tutorial/get-started-sqlserver)
 - GraphQL
 - Add docker file
 - Add CI/CD GitHub Action Integration 
@@ -32,8 +32,20 @@
 
 
 #Notes
-Run SQL-Server in Windows Docker Container
+Run SQL-Server in Windows Docker Container: https://theserogroup.com/sql-server/getting-started-with-sql-server-in-a-docker-container/
 - `docker pull mcr.microsoft.com/mssql/server:2019-latest`
 - `docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=34r0TNhvgOde" -p 1433:1433 --name sql2019 -h sql2019 -d mcr.microsoft.com/mssql/server:2019-latest`
 - - connect to the sql server instance on docker as normal, 
   ![Connect To Sql On Docker](../../docs/connect-to-sql-on-docker.png)
+- Run bash script in container: `docker exec -it sql2019 /bin/bash`  (to exit, execute: `exit` command)
+- Execute script in container from host: (example:create folder in container)
+  `docker exec -it sql2019 mkdir /var/opt/mssql/backup`
+- Copy file to container: `docker cp BaseballData.bak sql2019:/var/opt/mssql/backup`
+- Stopping and starting a SQL Server Docker container: `docker start sql2019` and `docker stop sql2019`
+- Run the following command in Azure Data Studio (or SQL Server Management Studio) to get a list of the database files for this database.
+ `RESTORE FILELISTONLY FROM DISK = '/var/opt/mssql/backup/BaseballData.bak';`
+- Run the following command in Azure Data Studio (or SQL Server Management Studio) to restore database
+    `RESTORE DATABASE BaseballData 
+    FROM DISK='/var/opt/mssql/backup/BaseballData.bak' 
+    WITH MOVE 'Baseball' TO '/var/opt/mssql/data/Baseball.mdf', 
+    MOVE 'Baseball_log' TO '/var/opt/mssql/data/Baseball_log.ldf';`

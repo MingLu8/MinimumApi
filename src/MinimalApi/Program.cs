@@ -1,5 +1,11 @@
+using Azure;
+using Azure.Core;
+using HotChocolate;
+using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
 using MinimimApi.Routers;
+using RepoDb;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -59,15 +65,21 @@ builder.Services.AddAuthorizationBuilder()
             .RequireRole("admin")
             .RequireClaim("scope", "greetings_api"));;
 
+
+var connectionString = builder.Configuration.GetConnectionString("minimalApi");
+builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
 builder.Services.AddScoped<RouterBase, HealthCheckRouter>();
 builder.Services.AddScoped<RouterBase, AuthRouter>();
 builder.Services.AddScoped<RouterBase, CustomerRouter>();
+builder.Services.AddScoped<RouterBase, PersonRouter>();
 builder.Services.AddScoped<RouterBase, FileUploadRouter>();
 builder.Services.AddScoped<RouterBase, FileDownloadRouter>();
 
 var app = builder.Build();
 app.UseExceptionHandler();
 app.UseStatusCodePages();
+app.UseHttpsRedirection();
+
 //Use Cors need NuGet Package for it.
 app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
 .WithOrigins("https://localhost:5296", "http://localhost:64714"));
@@ -100,6 +112,10 @@ app.MapGet("/users/{id:int}", (int id)
 
 app.MapGet("/exception", () 
     => { throw new InvalidOperationException("Sample Exception"); });
+
+GlobalConfiguration
+    .Setup()
+    .UseSqlServer();
 
 app.Run();
 

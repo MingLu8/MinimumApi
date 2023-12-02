@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{0C448DE0-710
 		baseline.sql = baseline.sql
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.UnitTests", "MinimalApi.UnitTests\MinimalApi.UnitTests\MinimalApi.UnitTests.csproj", "{8871E973-A496-417B-B11C-43E0D8B5E20D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,10 @@ Global
 		{4E01F739-19F4-4777-8F96-BCBD52B262AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E01F739-19F4-4777-8F96-BCBD52B262AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E01F739-19F4-4777-8F96-BCBD52B262AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8871E973-A496-417B-B11C-43E0D8B5E20D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8871E973-A496-417B-B11C-43E0D8B5E20D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8871E973-A496-417B-B11C-43E0D8B5E20D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8871E973-A496-417B-B11C-43E0D8B5E20D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

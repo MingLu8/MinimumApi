@@ -19,10 +19,12 @@
 - OpenID Connect (OIDC)
 - Object List To CSV Download
 - Import CSV to Object List
-- Unit Tests
-- Integraton Tests
+- Unit Tests *
+- NSubstitute *
+- Integraton Tests *
 - Use Record type for Database object
-- Use Dapper or RepoDb (https://repodb.net/tutorial/get-started-sqlserver)
+- RepoDb (https://repodb.net/tutorial/get-started-sqlserver)  *
+- Use Dapper
 - GraphQL
 - Add docker file
 - Add CI/CD GitHub Action Integration 

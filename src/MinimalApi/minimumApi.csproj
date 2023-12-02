@@ -9,8 +9,12 @@
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+  <ItemGroup>
+    <Content Include="..\..\docs\connect-to-sql-on-docker.png" Link="connect-to-sql-on-docker.png" />
+  </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="GraphQL.RepoDb.SqlServer" Version="13.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />

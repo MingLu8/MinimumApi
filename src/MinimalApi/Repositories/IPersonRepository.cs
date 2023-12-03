@@ -1,6 +1,7 @@
 ﻿using MinimumApi.Entities;
 using MinimumApi.Services;
 using System.Data.Common;
+using System.Linq.Expressions;
 
 namespace MinimumApi.Repositories
 {
@@ -8,8 +9,8 @@ namespace MinimumApi.Repositories
     {
         Task<IEnumerable<Person>> GetAllPeopleAsync();
         Task<Person> GetPersonByIdAsync(long id);
+        Task<IEnumerable<Person>> FindPersonAsync(Expression<Func<Person, bool>> where);
         Task<bool> ExistsAsync(long id);
-        Task<Person> GetPersonByNameAsync(string name);
         Task AddPersonAsync(Person person);
         Task UpdatePersonAsync(Person person);
         Task DeletePersonAsync(long id);

@@ -71,6 +71,7 @@ builder.Services.AddAuthorizationBuilder()
             .RequireRole("admin")
             .RequireClaim("scope", "greetings_api"));;
 
+builder.Services.AddAntiforgery();
 
 var connectionString = builder.Configuration.GetConnectionString("minimalApi");
 builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
@@ -93,6 +94,8 @@ app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseAntiforgery();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

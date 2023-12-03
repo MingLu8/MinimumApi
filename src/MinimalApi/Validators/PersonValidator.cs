@@ -1,24 +1,36 @@
 ﻿using FluentValidation;
 using MinimumApi.Entities;
 using MinimumApi.Repositories;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace MinimumApi.Validators
 {
     public class PersonValidator : AbstractValidator<Person>
     {
         private readonly IPersonRepository _personRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PersonValidator(IPersonRepository personRepository)
+        public PersonValidator(IPersonRepository personRepository, IHttpContextAccessor httpContextAccessor)
         {
+            _personRepository = personRepository;
+            _httpContextAccessor = httpContextAccessor;
+
             RuleFor(m => m.Name).NotEmpty();
             RuleFor(m => m.Age).NotEmpty().GreaterThan(0);
-            RuleFor(person => person.Id).MustAsync(ExistsOnDB).WithMessage(p => $"The person with id: {p.Id} does not exist");
-            _personRepository = personRepository;
+            RuleFor(person => person.Id)
+                .MustAsync(ExistAsync)
+                .When(IsPostRequest)
+                .WithMessage(p => $"The person with id: {p.Id} does not exist.");
         }
 
-        private Task<bool> ExistsOnDB(long id, CancellationToken token)
+        private bool IsPostRequest(Person person)
         {
-            return _personRepository.ExistsAsync(id);
+            return _httpContextAccessor.HttpContext?.Request.Method == "PUT";
         }
+
+        private async Task<bool> ExistAsync(long id, CancellationToken token)
+        {
+            return await _personRepository.ExistsAsync(id);              
+        }      
     }
 }

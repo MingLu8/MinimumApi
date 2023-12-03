@@ -22,6 +22,8 @@ namespace MinimimApi.Routers
 
                 return Results.NoContent();
             })
+            .DisableAntiforgery()
+            .RequireAuthorization()
             .Accepts<IFormFile>("multipart/form-data");
         }
     }

@@ -13,14 +13,14 @@ namespace MinimalApi.UnitTests
     public class PersonServiceTests
     {
         [Fact]
-        public void AddPersonAsync_auto_populates_CreateDateUTC()
+        public async Task AddPersonAsync_auto_populates_CreateDateUTC()
         {
             var validator = Substitute.For<IValidator<Person>>();
             var repo = Substitute.For<IPersonRepository>();
             var service = new PersonService(validator, repo);
             var person = new Person { Age = 1, Name = "x" };
-            service.AddPersonAsync(person);
-            repo.Received(1).AddPersonAsync(Arg.Is<Person>(p=> p.CreatedDateUtc.HasValue));
+            await service.AddPersonAsync(person);
+            await repo.Received(1).InsertAsync(Arg.Is<Person>(p=> p.CreatedDateUtc.HasValue));
         }
 
         [Fact]

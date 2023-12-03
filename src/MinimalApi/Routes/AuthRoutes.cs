@@ -8,9 +8,9 @@ namespace MinimimApi.Routers
 {
     public static class AuthRoutes
     {
-        public static void AddAuthRoutes(this RouteGroupBuilder root)
+        public static void AddAuthRoutes(this WebApplication app)
         {
-            root.MapGet("/auth", () =>
+            app.MapGet("/auth", () =>
             {
                 var authCommand = " user-jwts create --scope \"greetings_api\" --role \"admin\" ";
                 System.Diagnostics.Process proc = new System.Diagnostics.Process();

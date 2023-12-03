@@ -8,9 +8,9 @@ namespace MinimimApi.Routers
 {
     public static class HealthCheckRoutes
     {
-        public static void AddHealthCheckRoutes(this RouteGroupBuilder root)
+        public static void AddHealthCheckRoutes(this WebApplication app)
         {
-            root.MapGet("/ping", () =>
+            app.MapGet("/ping", () =>
             {
                 return TypedResults.Ok(DateTime.Now);
             }).AddEndpointFilter(async (efiContext, next) =>

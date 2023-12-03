@@ -2,13 +2,13 @@ namespace MinimimApi.Routers
 {
     public static class UploadRoutes
     {
-        public static void AddUploadRoutes(this RouteGroupBuilder root, WebApplication app)
+        public static void AddUploadRoutes(this WebApplication app)
         {
             var uploadDir = $"{app.Environment.ContentRootPath}/uploads";
             if(!Directory.Exists(uploadDir))
                 Directory.CreateDirectory(uploadDir);
 
-            root.MapPost("uploads", async (IFormFile file) =>
+            app.MapPost("uploads", async (IFormFile file) =>
             {
                 if (file is null)
                 {

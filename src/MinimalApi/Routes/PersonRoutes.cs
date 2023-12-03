@@ -10,9 +10,9 @@ namespace MinimumApi.Routes
 {
     public static class PersonRoutes
     {
-        public static void AddPersonRoutes(this RouteGroupBuilder root)
+        public static void AddPersonRoutes(this WebApplication app)
         {
-            var customerRoutes = root.MapGroup("people").WithTags("person");
+            var customerRoutes = app.MapGroup("people").WithTags("person");
             customerRoutes.MapGet("/", GetAllPeopleAsync);
             customerRoutes.MapGet("/{id:long}", GetPersonByIdAsync).WithName("getPersonById");
             customerRoutes.MapGet("/{name}", GetPersonByNameAsync);
@@ -36,13 +36,6 @@ namespace MinimumApi.Routes
         {
             var result = await service.GetPersonByNameAsync(name);
             return TypedResults.Ok(result);
-        }
-
-        private async static Task<IResult> AddPersonAsync2([Validate] Person person, IPersonService service, LinkGenerator linker)
-        {
-            await service.AddPersonAsync(person);
-            var location = linker.GetPathByName("getPersonById", new { id = person.Id });
-            return TypedResults.Created($"{location}", person);          
         }
 
         private async static Task<IResult> AddPersonAsync(Person person, IPersonService service, LinkGenerator linker, IValidator<Person> validator)

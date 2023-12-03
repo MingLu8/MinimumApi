@@ -101,12 +101,10 @@ if (app.Environment.IsDevelopment())
     //app.UseDeveloperExceptionPage();
 }
 
-var root = app.MapGroup("");
-//root.AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory);
-root.AddPersonRoutes();
-root.AddHealthCheckRoutes();
-root.AddAuthRoutes();
-root.AddUploadRoutes(app);
+app.AddPersonRoutes();
+app.AddHealthCheckRoutes();
+app.AddAuthRoutes();
+app.AddUploadRoutes();
 
 GlobalConfiguration
     .Setup()

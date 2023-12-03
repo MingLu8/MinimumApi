@@ -1,6 +1,8 @@
 ﻿using GreenDonut;
 using MinimumApi.Entities;
 using MinimumApi.Services;
+using MinimumApi.Validators;
+using System;
 using System.Data;
 
 namespace MinimumApi.Routes
@@ -35,16 +37,27 @@ namespace MinimumApi.Routes
             return TypedResults.Ok(result);
         }
 
-        private async static Task<IResult> AddPersonAsync(Person person, IPersonService service, LinkGenerator linker)
+        private async static Task<IResult> AddPersonAsync(Validated<Person> req, IPersonService service, LinkGenerator linker)
         {
-            await service.AddPersonAsync(person);
-            var location = linker.GetPathByName("getPersonById", new { id = person.Id });
-            return TypedResults.Created($"{location}", person);
+            var (isValid, value) = req;
+
+            if (isValid)
+            {
+                await service.AddPersonAsync(value);
+                var location = linker.GetPathByName("getPersonById", new { id = value.Id });
+                return TypedResults.Created($"{location}", value);
+            }
+
+            return TypedResults.ValidationProblem(req.Errors);
         }
 
-        private async static Task<IResult> UpdatePersonAsync(Person person, IPersonService service)
+        private async static Task<IResult> UpdatePersonAsync(Validated<Person> req, IPersonService service)
         {
-            await service.UpdatePersonAsync(person);
+            var (isValid, value) = req;
+
+            if (isValid)
+                await service.UpdatePersonAsync(value);
+
             return TypedResults.NoContent();
         }     
         private async static Task<IResult> DeletePersonAsync(int id, IPersonService service)

@@ -1,5 +1,6 @@
 using Azure;
 using Azure.Core;
+using FluentValidation;
 using HotChocolate;
 using Microsoft.Data.SqlClient;
 using Microsoft.OpenApi.Models;
@@ -74,6 +75,9 @@ var connectionString = builder.Configuration.GetConnectionString("minimalApi");
 builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 

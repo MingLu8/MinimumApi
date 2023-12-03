@@ -29,7 +29,7 @@
 - Add docker file
 - Add CI/CD GitHub Action Integration 
 - Add Azure Appplication Insight Integration
-- Parameter validation
+- Parameter validation (Fluent Validation)
 - Add Code Coverage
 
 
@@ -51,3 +51,7 @@ Run SQL-Server in Windows Docker Container: https://theserogroup.com/sql-server/
     FROM DISK='/var/opt/mssql/backup/BaseballData.bak' 
     WITH MOVE 'Baseball' TO '/var/opt/mssql/data/Baseball.mdf', 
     MOVE 'Baseball_log' TO '/var/opt/mssql/data/Baseball_log.ldf';`
+
+# Add validation filters, 
+https://benfoster.io/blog/minimal-api-validation-endpoint-filters/
+https://khalidabuhakmeh.com/minimal-api-validation-with-fluentvalidation

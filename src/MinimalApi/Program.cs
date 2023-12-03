@@ -9,6 +9,7 @@ using MinimumApi.Middlewares;
 using MinimumApi.Repositories;
 using MinimumApi.Routes;
 using MinimumApi.Services;
+using MinimumApi.Validators;
 using RepoDb;
 using System.Data;
 
@@ -77,7 +78,7 @@ builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
 
 var app = builder.Build();
 
@@ -100,16 +101,12 @@ if (app.Environment.IsDevelopment())
     //app.UseDeveloperExceptionPage();
 }
 
-app.AddPersonRoutes();
-app.AddHealthCheckRoutes();
-app.AddAuthRoutes();
-app.AddUploadRoutes();
-
-app.MapGet("/users/{id:int}", (int id) 
-    => id <= 0 ? Results.BadRequest() : Results.Ok(new {id}) );
-
-app.MapGet("/exception", () 
-    => { throw new InvalidOperationException("Sample Exception"); });
+var root = app.MapGroup("");
+root.AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory);
+root.AddPersonRoutes();
+root.AddHealthCheckRoutes();
+root.AddAuthRoutes();
+root.AddUploadRoutes(app);
 
 GlobalConfiguration
     .Setup()

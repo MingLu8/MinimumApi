@@ -9,9 +9,9 @@ namespace MinimumApi.Routes
 {
     public static class PersonRoutes
     {
-        public static void AddPersonRoutes(this WebApplication app)
+        public static void AddPersonRoutes(this RouteGroupBuilder root)
         {
-            var customerRoutes = app.MapGroup("people").WithTags("person");
+            var customerRoutes = root.MapGroup("people").WithTags("person");
             customerRoutes.MapGet("/", GetAllPeopleAsync);
             customerRoutes.MapGet("/{id:int}", GetPersonByIdAsync).WithName("getPersonById");
             customerRoutes.MapGet("/{name}", GetPersonByNameAsync);
@@ -37,18 +37,12 @@ namespace MinimumApi.Routes
             return TypedResults.Ok(result);
         }
 
-        private async static Task<IResult> AddPersonAsync(Validated<Person> req, IPersonService service, LinkGenerator linker)
+        private async static Task<IResult> AddPersonAsync([Validate] RegisterCustomerRequest req, IPersonService service, LinkGenerator linker)
         {
-            var (isValid, value) = req;
-
-            if (isValid)
-            {
-                await service.AddPersonAsync(value);
-                var location = linker.GetPathByName("getPersonById", new { id = value.Id });
-                return TypedResults.Created($"{location}", value);
-            }
-
-            return TypedResults.ValidationProblem(req.Errors);
+            var person = new Person { Name = req.Name, Age = req.Age };
+            await service.AddPersonAsync(person);
+            var location = linker.GetPathByName("getPersonById", new { id = person.Id });
+            return TypedResults.Created($"{location}", person);          
         }
 
         private async static Task<IResult> UpdatePersonAsync(Validated<Person> req, IPersonService service)

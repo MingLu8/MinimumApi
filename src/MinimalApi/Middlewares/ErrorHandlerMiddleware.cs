@@ -14,18 +14,25 @@ namespace MinimumApi.Middlewares
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IHttpContextAccessor httpContextAccessor, ILogger<ErrorHandlerMiddleware> logger)
         {
+            var path = httpContextAccessor.HttpContext?.Request.Path;
+            var method = httpContextAccessor.HttpContext?.Request.Method;
+            var startTime = DateTime.Now;
             try
             {
+                logger.LogDebug($"==> {method}:{path} on {startTime}.");
                 await _next(context);
+                logger.LogDebug($"<== {method}:{path} on {DateTime.Now}, duration: {DateTime.Now.Subtract(startTime).TotalMilliseconds}ms.");
             }
             catch (Exception error)
-            {   
+            {
+                logger.LogError(error, $"==X {method}:{path} on {DateTime.Now}, duration: {DateTime.Now.Subtract(startTime).TotalMilliseconds}ms, error: {error.Message}.");
+
                 switch (error)
                 {
-                    case ValidationException e:
-                        await Results.Problem(detail: error?.Message, statusCode: (int)HttpStatusCode.BadRequest, title: HttpStatusCode.BadRequest.ToString())
+                    case ValidationFailedException e:
+                       await TypedResults.ValidationProblem(errors: e.Errors ?? new Dictionary<string, string[]>(), detail: e.Message, title: HttpStatusCode.BadRequest.ToString(), type: "Validation Error")
                             .ExecuteAsync(context);
                         break;
                     case ResourceNotFoundException e:

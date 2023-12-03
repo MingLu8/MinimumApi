@@ -50,16 +50,11 @@ namespace MinimumApi.Routes
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        private async static Task<IResult> UpdatePersonAsync(long id, Person person, IPersonService service, IValidator<Person> validator)
+        private async static Task<IResult> UpdatePersonAsync(long id, Person person, IPersonService service)
         {
             person.Id = id;
-            var validationResult = await validator.ValidateAsync(person);
-            if (validationResult.IsValid)
-            {
-                await service.UpdatePersonAsync(person);
-                return TypedResults.NoContent();
-            }
-            return Results.ValidationProblem(validationResult.ToDictionary());
+            await service.UpdatePersonAsync(person);
+            return TypedResults.NoContent();
         }
      
         private async static Task<IResult> DeletePersonAsync(long id, IPersonService service)

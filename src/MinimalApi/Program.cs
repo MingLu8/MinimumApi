@@ -83,6 +83,7 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 var app = builder.Build();
 
 app.UseMiddleware<ErrorHandlerMiddleware>();
+
 app.UseStatusCodePages();
 app.UseHttpsRedirection();
 

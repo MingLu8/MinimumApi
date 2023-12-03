@@ -1,4 +1,5 @@
-﻿using GreenDonut;
+﻿using FluentValidation;
+using GreenDonut;
 using MinimumApi.Entities;
 using MinimumApi.Services;
 using MinimumApi.Validators;
@@ -13,11 +14,11 @@ namespace MinimumApi.Routes
         {
             var customerRoutes = root.MapGroup("people").WithTags("person");
             customerRoutes.MapGet("/", GetAllPeopleAsync);
-            customerRoutes.MapGet("/{id:int}", GetPersonByIdAsync).WithName("getPersonById");
+            customerRoutes.MapGet("/{id:long}", GetPersonByIdAsync).WithName("getPersonById");
             customerRoutes.MapGet("/{name}", GetPersonByNameAsync);
             customerRoutes.MapPost("/", AddPersonAsync);
-            customerRoutes.MapPut("/{id:int}", UpdatePersonAsync);
-            customerRoutes.MapDelete("/{id:int}", DeletePersonAsync);          
+            customerRoutes.MapPut("/{id:long}", UpdatePersonAsync);
+            customerRoutes.MapDelete("/{id:long}", DeletePersonAsync);          
         }
 
         private async static Task<IResult> GetAllPeopleAsync(IPersonService service)
@@ -26,7 +27,7 @@ namespace MinimumApi.Routes
             return TypedResults.Ok(result);
         }
                 
-        private async static Task<IResult> GetPersonByIdAsync(int id, IPersonService service)
+        private async static Task<IResult> GetPersonByIdAsync(long id, IPersonService service)
         {
             var result = await service.GetPersonByIdAsync(id);
             return TypedResults.Ok(result);
@@ -37,23 +38,38 @@ namespace MinimumApi.Routes
             return TypedResults.Ok(result);
         }
 
-        private async static Task<IResult> AddPersonAsync([Validate] Person person, IPersonService service, LinkGenerator linker)
+        private async static Task<IResult> AddPersonAsync2([Validate] Person person, IPersonService service, LinkGenerator linker)
         {
             await service.AddPersonAsync(person);
             var location = linker.GetPathByName("getPersonById", new { id = person.Id });
             return TypedResults.Created($"{location}", person);          
         }
 
-        private async static Task<IResult> UpdatePersonAsync(Validated<Person> req, IPersonService service)
+        private async static Task<IResult> AddPersonAsync(Person person, IPersonService service, LinkGenerator linker, IValidator<Person> validator)
         {
-            var (isValid, value) = req;
+            var validationResult = validator.Validate(person);
+            if (validationResult.IsValid)
+            {
+                await service.AddPersonAsync(person);
+                var location = linker.GetPathByName("getPersonById", new { id = person.Id });
+                return TypedResults.Created($"{location}", person);
+            }
+            return Results.ValidationProblem(validationResult.ToDictionary());
+        }
 
-            if (isValid)
-                await service.UpdatePersonAsync(value);
-
-            return TypedResults.NoContent();
-        }     
-        private async static Task<IResult> DeletePersonAsync(int id, IPersonService service)
+        private async static Task<IResult> UpdatePersonAsync(long id, Person person, IPersonService service, IValidator<Person> validator)
+        {
+            person.Id = id;
+            var validationResult = await validator.ValidateAsync(person);
+            if (validationResult.IsValid)
+            {
+                await service.UpdatePersonAsync(person);
+                return TypedResults.NoContent();
+            }
+            return Results.ValidationProblem(validationResult.ToDictionary());
+        }
+     
+        private async static Task<IResult> DeletePersonAsync(long id, IPersonService service)
         {
             await service.DeletePersonAsync(id);
             return TypedResults.Ok();

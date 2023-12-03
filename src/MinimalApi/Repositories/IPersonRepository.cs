@@ -7,10 +7,11 @@ namespace MinimumApi.Repositories
     public interface IPersonRepository
     {
         Task<IEnumerable<Person>> GetAllPeopleAsync();
-        Task<Person> GetPersonByIdAsync(int id);
+        Task<Person> GetPersonByIdAsync(long id);
+        Task<bool> ExistsAsync(long id);
         Task<Person> GetPersonByNameAsync(string name);
         Task AddPersonAsync(Person person);
         Task UpdatePersonAsync(Person person);
-        Task DeletePersonAsync(int id);
+        Task DeletePersonAsync(long id);
     }
 }

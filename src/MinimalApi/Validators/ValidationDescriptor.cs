@@ -2,14 +2,10 @@
 
 namespace MinimumApi.Validators
 {
-
-    public static partial class ValidationFilter
+    public class ValidationDescriptor
     {
-        private class ValidationDescriptor
-        {
-            public required int ArgumentIndex { get; init; }
-            public required Type ArgumentType { get; init; }
-            public required IValidator Validator { get; init; }
-        }
+        public required int ArgumentIndex { get; init; }
+        public required Type ArgumentType { get; init; }
+        public required IValidator Validator { get; init; }
     }
 }

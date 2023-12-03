@@ -62,7 +62,7 @@ builder.Services.AddSwaggerGen(
 
     });
 
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddCors();
 builder.Services.AddAuthentication().AddJwtBearer();
 builder.Services.AddAuthorizationBuilder()
@@ -78,7 +78,7 @@ builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
 
-builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Singleton);
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 var app = builder.Build();
 
@@ -102,7 +102,7 @@ if (app.Environment.IsDevelopment())
 }
 
 var root = app.MapGroup("");
-root.AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory);
+//root.AddEndpointFilterFactory(ValidationFilter.ValidationFilterFactory);
 root.AddPersonRoutes();
 root.AddHealthCheckRoutes();
 root.AddAuthRoutes();

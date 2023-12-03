@@ -6,7 +6,7 @@ namespace MinimumApi.Services
     public class PersonService(IPersonRepository personRepository) : IPersonService
     {
         public Task<IEnumerable<Person>> GetAllPeopleAsync() => personRepository.GetAllPeopleAsync();
-        public Task<Person> GetPersonByIdAsync(int id) => personRepository.GetPersonByIdAsync(id);
+        public Task<Person> GetPersonByIdAsync(long id) => personRepository.GetPersonByIdAsync(id);
         public Task<Person> GetPersonByNameAsync(string name) => personRepository.GetPersonByNameAsync(name);
         public Task AddPersonAsync(Person person)
         {
@@ -17,7 +17,7 @@ namespace MinimumApi.Services
         }
 
         public Task UpdatePersonAsync(Person person) => personRepository.UpdatePersonAsync(person);
-        public Task DeletePersonAsync(int id) => personRepository.DeletePersonAsync(id);
+        public Task DeletePersonAsync(long id) => personRepository.DeletePersonAsync(id);
       
     }
 }

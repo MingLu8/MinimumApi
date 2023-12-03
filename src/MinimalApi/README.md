@@ -55,3 +55,4 @@ Run SQL-Server in Windows Docker Container: https://theserogroup.com/sql-server/
 # Add validation filters, 
 https://benfoster.io/blog/minimal-api-validation-endpoint-filters/
 https://khalidabuhakmeh.com/minimal-api-validation-with-fluentvalidation
+https://dotnetthoughts.net/working-model-validation-in-minimal-api/

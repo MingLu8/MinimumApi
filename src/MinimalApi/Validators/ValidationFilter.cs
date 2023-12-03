@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace MinimumApi.Validators
 {
-    public static partial class ValidationFilter
+    public static class ValidationFilter
     {
         public static EndpointFilterDelegate ValidationFilterFactory(EndpointFilterFactoryContext context, EndpointFilterDelegate next)
         {

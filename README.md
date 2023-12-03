@@ -1,4 +1,5 @@
 # Code Samples for MinimumApi
+This is ASP.NET Core 8 Minimum API template project containing sample codes for:
 - Route Setup *
 - Swagger *
 - Global Exception Handling *
@@ -21,6 +22,8 @@
 - Import CSV to Object List
 - Unit Tests *
 - NSubstitute *
+- FluentAssertions *
+- FluentValidation *
 - Integraton Tests *
 - Use Record type for Database object
 - RepoDb (https://repodb.net/tutorial/get-started-sqlserver)  *
@@ -38,7 +41,7 @@ Run SQL-Server in Windows Docker Container: https://theserogroup.com/sql-server/
 - `docker pull mcr.microsoft.com/mssql/server:2019-latest`
 - `docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=34r0TNhvgOde" -p 1433:1433 --name sql2019 -h sql2019 -d mcr.microsoft.com/mssql/server:2019-latest`
 - - connect to the sql server instance on docker as normal, 
-  ![Connect To Sql On Docker](../../docs/connect-to-sql-on-docker.png)
+  ![Connect To Sql On Docker](./docs/connect-to-sql-on-docker.png)
 - Run bash script in container: `docker exec -it sql2019 /bin/bash`  (to exit, execute: `exit` command)
 - Execute script in container from host: (example:create folder in container)
   `docker exec -it sql2019 mkdir /var/opt/mssql/backup`

@@ -37,9 +37,8 @@ namespace MinimumApi.Routes
             return TypedResults.Ok(result);
         }
 
-        private async static Task<IResult> AddPersonAsync([Validate] RegisterCustomerRequest req, IPersonService service, LinkGenerator linker)
+        private async static Task<IResult> AddPersonAsync([Validate] Person person, IPersonService service, LinkGenerator linker)
         {
-            var person = new Person { Name = req.Name, Age = req.Age };
             await service.AddPersonAsync(person);
             var location = linker.GetPathByName("getPersonById", new { id = person.Id });
             return TypedResults.Created($"{location}", person);          

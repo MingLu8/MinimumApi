@@ -76,7 +76,7 @@ builder.Services.AddAntiforgery();
 var connectionString = builder.Configuration.GetConnectionString("minimalApi");
 builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
 builder.Services.AddScoped<IPersonService, PersonService>();
-builder.Services.AddScoped<IPersonRepository, PersonSqlRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepoDbRepository>();
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();

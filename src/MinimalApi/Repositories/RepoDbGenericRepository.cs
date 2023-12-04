@@ -1,5 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using MinimumApi.Entities;
 using RepoDb;
 using RepoDb.Enumerations;
 using RepoDb.Interfaces;
@@ -8,9 +7,9 @@ using System.Data.Common;
 
 namespace MinimumApi.Repositories
 {
-    public class GenericRepository<T> : BaseRepository<T, SqlConnection>, IGenericRepository<T> where T : class
+    public class RepoDbGenericRepository<T> : BaseRepository<T, SqlConnection>, IGenericRepository<T> where T : class
     {
-        public GenericRepository(IDbConnection connection) : base(connection.ConnectionString)
+        public RepoDbGenericRepository(IDbConnection connection) : base(connection.ConnectionString)
         {
         }
 
@@ -39,12 +38,5 @@ namespace MinimumApi.Repositories
         public int Update(T entity) => base.Update(entity);
 
         public Task<int> UpdateAsync(T entity) => base.UpdateAsync(entity);      
-    }
-
-    public class PersonSqlRepository : GenericRepository<Person>, IPersonRepository
-    {
-        public PersonSqlRepository(IDbConnection connection) : base(connection)
-        {
-        }
     }
 }

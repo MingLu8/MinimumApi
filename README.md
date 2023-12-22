@@ -1,4 +1,4 @@
-# Code Samples for MinimumApi
+# Common usage code Samples for .Net 8 MinimalApi
 This is ASP.NET Core 8 Minimum API template project containing sample codes for:
 - Route Setup *
 - Swagger *
@@ -17,23 +17,25 @@ This is ASP.NET Core 8 Minimum API template project containing sample codes for:
 - Swagger JWT Authorization Integration *
 - Endpoint grouping *
 - Http Editor, .http files *
-- OpenID Connect (OIDC)
-- Object List To CSV Download
-- Import CSV to Object List
 - Unit Tests *
 - NSubstitute *
 - FluentAssertions *
 - FluentValidation *
 - Integraton Tests *
-- Use Record type for Database object
 - RepoDb (https://repodb.net/tutorial/get-started-sqlserver)  *
+- RepoDb with Sqlite *
+- Kafka Producer and Consumer *
 - Use Dapper
+- Use Record type for Database object
 - GraphQL
 - Add docker file
 - Add CI/CD GitHub Action Integration 
 - Add Azure Appplication Insight Integration
 - Parameter validation (Fluent Validation)
 - Add Code Coverage
+- OpenID Connect (OIDC)
+- Object List To CSV Download
+- Import CSV to Object List
 
 
 #Notes

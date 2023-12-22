@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MinimimApi.Routers;
+using MinimumApi.Kafka;
 using MinimumApi.Middlewares;
 using MinimumApi.Repositories;
 using MinimumApi.Routes;
@@ -86,10 +87,13 @@ builder.Services.AddAntiforgery();
 var consumerConfig = new ConsumerConfig();
 builder.Configuration.Bind("ConsumerConfig", consumerConfig);
 builder.Services.AddSingleton(_=>consumerConfig);
+builder.Services.AddSingleton<IConsumer, Consumer>();
+
 
 var producerConfig = new ProducerConfig();
 builder.Configuration.Bind("ProducerConfig", producerConfig);
 builder.Services.AddSingleton(_ => producerConfig);
+builder.Services.AddSingleton<IProducer, Producer>();
 
 //var connectionString = builder.Configuration.GetConnectionString("minimalApiMsSQL");
 //builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
@@ -128,6 +132,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.AddPersonRoutes(consumerConfig);
+app.AddKafkaRoutes();
 app.AddHealthCheckRoutes();
 app.AddAuthRoutes();
 app.AddUploadRoutes();

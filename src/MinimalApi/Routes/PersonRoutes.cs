@@ -13,7 +13,7 @@ namespace MinimumApi.Routes
 {
     public static class PersonRoutes
     {
-        public static void AddPersonRoutes(this WebApplication app, ConsumerConfig config)
+        public static void AddPersonRoutes(this WebApplication app)
         {           
             var customerRoutes = app.MapGroup("people").WithTags("person");
             customerRoutes.MapGet("/", GetAllPeopleAsync);
@@ -25,13 +25,13 @@ namespace MinimumApi.Routes
             customerRoutes.MapDelete("/{id:long}", DeletePersonAsync);
         }       
 
-        private async static Task<IResult> GetAllPeopleAsync(IPersonService service, ProducerConfig config)
+        private async static Task<IResult> GetAllPeopleAsync(IPersonService service)
         {          
             var result = await service.GetAllPeopleAsync();
             return TypedResults.Ok(result);
         }
                 
-        private async static Task<IResult> GetPersonByIdAsync(long id, IPersonService service, ConsumerConfig config)
+        private async static Task<IResult> GetPersonByIdAsync(long id, IPersonService service)
         {           
             var result = await service.GetPersonByIdAsync(id);
             return TypedResults.Ok(result);

@@ -1,8 +1,12 @@
 using Azure;
 using Azure.Core;
+using Confluent.Kafka;
 using FluentValidation;
 using HotChocolate;
 using Microsoft.Data.SqlClient;
+using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MinimimApi.Routers;
 using MinimumApi.Middlewares;
@@ -12,8 +16,14 @@ using MinimumApi.Services;
 using MinimumApi.Validators;
 using RepoDb;
 using System.Data;
+using System.Data.SQLite;
+
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddJsonFile($"appsettings{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Services.AddProblemDetails();
@@ -73,8 +83,20 @@ builder.Services.AddAuthorizationBuilder()
 
 builder.Services.AddAntiforgery();
 
-var connectionString = builder.Configuration.GetConnectionString("minimalApi");
-builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
+var consumerConfig = new ConsumerConfig();
+builder.Configuration.Bind("ConsumerConfig", consumerConfig);
+builder.Services.AddSingleton(_=>consumerConfig);
+
+var producerConfig = new ProducerConfig();
+builder.Configuration.Bind("ProducerConfig", producerConfig);
+builder.Services.AddSingleton(_ => producerConfig);
+
+//var connectionString = builder.Configuration.GetConnectionString("minimalApiMsSQL");
+//builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
+
+var connectionString = builder.Configuration.GetConnectionString("minimalApiSqlLite");
+builder.Services.AddScoped<IDbConnection>(_ => new SQLiteConnection(connectionString));
+
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IPersonRepository, PersonRepoDbRepository>();
 
@@ -105,14 +127,15 @@ if (app.Environment.IsDevelopment())
     //app.UseDeveloperExceptionPage();
 }
 
-app.AddPersonRoutes();
+app.AddPersonRoutes(consumerConfig);
 app.AddHealthCheckRoutes();
 app.AddAuthRoutes();
 app.AddUploadRoutes();
 
 GlobalConfiguration
     .Setup()
-    .UseSqlServer();
+    //.UseSqlServer()
+    .UseSQLite();
 
 app.Run();
 

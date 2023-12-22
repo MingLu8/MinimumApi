@@ -3,7 +3,7 @@ using System.Data;
 
 namespace MinimumApi.Repositories
 {
-    public class PersonRepoDbRepository : RepoDbGenericRepository<Person>, IPersonRepository
+    public class PersonRepoDbRepository : RepoDbSqlLiteRepository<Person>, IPersonRepository
     {
         public PersonRepoDbRepository(IDbConnection connection) : base(connection)
         {

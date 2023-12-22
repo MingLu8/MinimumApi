@@ -3,7 +3,7 @@ using System.Data;
 
 namespace MinimalApi.UnitTests.db
 {
-    public class TestDataRepoDbRepository : RepoDbGenericRepository<TestData>
+    public class TestDataRepoDbRepository : RepoDbSqlLiteRepository<TestData>
     {
         public TestDataRepoDbRepository(IDbConnection connection) : base(connection)
         {

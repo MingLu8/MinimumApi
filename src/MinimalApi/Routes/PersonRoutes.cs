@@ -1,17 +1,20 @@
-﻿using FluentValidation;
+﻿using Confluent.Kafka;
+using FluentValidation;
 using GreenDonut;
+using Microsoft.Extensions.Configuration;
 using MinimumApi.Entities;
 using MinimumApi.Services;
 using MinimumApi.Validators;
 using System;
 using System.Data;
+using System.Net;
 
 namespace MinimumApi.Routes
 {
     public static class PersonRoutes
     {
-        public static void AddPersonRoutes(this WebApplication app)
-        {
+        public static void AddPersonRoutes(this WebApplication app, ConsumerConfig config)
+        {           
             var customerRoutes = app.MapGroup("people").WithTags("person");
             customerRoutes.MapGet("/", GetAllPeopleAsync);
             customerRoutes.MapGet("/{id:long}", GetPersonByIdAsync).WithName("getPersonById");
@@ -19,17 +22,17 @@ namespace MinimumApi.Routes
             customerRoutes.MapPost("/", AddPersonAsync);
             customerRoutes.MapPut("/{id:long}", UpdatePersonAsync);
             customerRoutes.MapPatch("/{id:long}", PatchPersonAsync);
-            customerRoutes.MapDelete("/{id:long}", DeletePersonAsync);          
-        }
+            customerRoutes.MapDelete("/{id:long}", DeletePersonAsync);
+        }       
 
-        private async static Task<IResult> GetAllPeopleAsync(IPersonService service)
-        {
+        private async static Task<IResult> GetAllPeopleAsync(IPersonService service, ProducerConfig config)
+        {          
             var result = await service.GetAllPeopleAsync();
             return TypedResults.Ok(result);
         }
                 
-        private async static Task<IResult> GetPersonByIdAsync(long id, IPersonService service)
-        {
+        private async static Task<IResult> GetPersonByIdAsync(long id, IPersonService service, ConsumerConfig config)
+        {           
             var result = await service.GetPersonByIdAsync(id);
             return TypedResults.Ok(result);
         }

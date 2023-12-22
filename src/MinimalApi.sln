@@ -14,15 +14,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalApi.IntegrationTests
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sql", "sql", "{0C448DE0-710A-49C2-A974-BCA47C8150B3}"
 	ProjectSection(SolutionItems) = preProject
+		baseline-sqllite.sql = baseline-sqllite.sql
 		baseline.sql = baseline.sql
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalApi.UnitTests", "MinimalApi.UnitTests\MinimalApi.UnitTests\MinimalApi.UnitTests.csproj", "{8871E973-A496-417B-B11C-43E0D8B5E20D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinimalApi.UnitTests", "MinimalApi.UnitTests\MinimalApi.UnitTests\MinimalApi.UnitTests.csproj", "{8871E973-A496-417B-B11C-43E0D8B5E20D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61B80209-195F-4479-8F11-00BC8CD5E65D}"
 	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
 		..\README.md = ..\README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaProducer", "KafkaProducer\KafkaProducer.csproj", "{9DC35F1C-DCE4-4B17-8700-D003218292D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaConsumer", "KafkaConsumer\KafkaConsumer.csproj", "{E75B66F6-9018-4080-9992-967D8DC9E5A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +48,14 @@ Global
 		{8871E973-A496-417B-B11C-43E0D8B5E20D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8871E973-A496-417B-B11C-43E0D8B5E20D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8871E973-A496-417B-B11C-43E0D8B5E20D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DC35F1C-DCE4-4B17-8700-D003218292D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DC35F1C-DCE4-4B17-8700-D003218292D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DC35F1C-DCE4-4B17-8700-D003218292D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DC35F1C-DCE4-4B17-8700-D003218292D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E75B66F6-9018-4080-9992-967D8DC9E5A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E75B66F6-9018-4080-9992-967D8DC9E5A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E75B66F6-9018-4080-9992-967D8DC9E5A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E75B66F6-9018-4080-9992-967D8DC9E5A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

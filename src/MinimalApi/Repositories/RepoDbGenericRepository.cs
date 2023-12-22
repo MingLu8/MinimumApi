@@ -1,18 +1,11 @@
-﻿using Microsoft.Data.SqlClient;
-using RepoDb;
-using RepoDb.Enumerations;
-using RepoDb.Interfaces;
-using System.Data;
+﻿using RepoDb;
 using System.Data.Common;
 
 namespace MinimumApi.Repositories
 {
-    public class RepoDbGenericRepository<T> : BaseRepository<T, SqlConnection>, IGenericRepository<T> where T : class
+    public class RepoDbGenericRepository<T, TDbConnection>(TDbConnection connection) 
+        : BaseRepository<T, TDbConnection>(connection.ConnectionString), IGenericRepository<T> where T : class where TDbConnection : DbConnection, new()
     {
-        public RepoDbGenericRepository(IDbConnection connection) : base(connection.ConnectionString)
-        {
-        }
-
         public int Delete(long id) => base.Delete(id);  
        
         public Task<int> DeleteAsync(long id) => base.DeleteAsync(id);

@@ -19,11 +19,17 @@ namespace MinimumApi.Kafka
             return KafkaConsumer.Consume(timeoutInMillisecnonds);
         }
 
-        public void Dispose()
+        public ConsumeResult<Ignore, string> Consume(CancellationToken cancellationToken)
         {
-            KafkaConsumer.Dispose();
+            return KafkaConsumer.Consume(cancellationToken);
         }
-
+        public void StoreOffset(ConsumeResult<Ignore, string> result)
+        {
+            if (result == null) return;
+                
+            _consumer.StoreOffset(result);
+        }
+   
         public void Subscribe(string topic)
         {
             KafkaConsumer.Subscribe(topic);
@@ -33,5 +39,11 @@ namespace MinimumApi.Kafka
         {
             KafkaConsumer.Unsubscribe();
         }
+
+        public void Dispose()
+        {
+            KafkaConsumer.Dispose();
+        }
+
     }
 }

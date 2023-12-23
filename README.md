@@ -1,3 +1,10 @@
+Hello There, I'm currently looking for a job, a Tech Lead, or Development Manager (preferable remote)
+
+| Item         | Price     | # In stock |
+|--------------|-----------|------------|
+| Juicy Apples | 1.99      | *7*        |
+| Bananas      | **1.89**  | 5234       |
+
 # Common usage code Samples for .Net 8 MinimalApi
 This is ASP.NET Core 8 Minimum API template project containing sample codes for:
 - Route Setup *

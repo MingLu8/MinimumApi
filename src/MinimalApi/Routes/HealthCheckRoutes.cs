@@ -8,7 +8,7 @@ namespace MinimimApi.Routers
 {
     public static class HealthCheckRoutes
     {
-        public static void AddHealthCheckRoutes(this WebApplication app)
+        public static void UseHealthCheckRoutes(this WebApplication app)
         {
             app.MapGet("/ping", () =>
             {

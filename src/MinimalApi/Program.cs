@@ -28,6 +28,7 @@ builder.Configuration
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Services.AddProblemDetails();
+builder.Services.AddHttpClient();
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -121,11 +122,11 @@ if (app.Environment.IsDevelopment())
     //app.UseDeveloperExceptionPage();
 }
 
-app.AddPersonRoutes();
-app.AddKafkaRoutes();
-app.AddHealthCheckRoutes();
-app.AddAuthRoutes();
-app.AddUploadRoutes();
+app.UsePersonRoutes();
+app.UseKafkaRoutes();
+app.UseHealthCheckRoutes();
+app.UseAuthRoutes();
+app.UseUploadRoutes();
 
 GlobalConfiguration
     .Setup()

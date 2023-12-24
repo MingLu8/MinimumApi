@@ -21,3 +21,91 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  ksqldb-server-connect-test:
+    image: confluentinc/ksqldb-server:0.15.0
+    hostname: ksqldb-server-connect-test
+    container_name: ksqldb-server-connect-test
+    #ports:
+    #  - "8088:8088"
+    network_mode: "host"
+    environment:
+      KSQL_KSQL_SERVICE_ID: "default_"
+      KSQL_LISTENERS: http://0.0.0.0:8088
+      KSQL_BOOTSTRAP_SERVERS: localhost:9092,localhost:29092
+      KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
+      KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
+      KSQL_KSQL_SCHEMA_REGISTRY_URL: http://localhost:8081
+      #KSQL_KSQL_CONNECT_URL: http://localhost:8083
+      
+  ksqldb-cli-connect-test:
+    image: confluentinc/ksqldb-cli:0.15.0
+    container_name: ksqldb-cli-connect-test
+    network_mode: "host"
+    depends_on:
+      - ksqldb-server-connect-test
+    entrypoint: /bin/sh
+    tty: true
+
+  schema-registry-connect-test:
+    image: confluentinc/cp-schema-registry:6.0.1
+    container_name: schema-registry-connect-test
+    network_mode: "host"
+    #ports:
+    #  - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: localhost:9092,localhost:29092
+    restart: always
+    
+  kafka-connect-1:
+    image: confluentinc/cp-kafka-connect-base:6.0.1
+    container_name: kafka-connect-1
+    network_mode: "host"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "localhost:9092,localhost:29092"
+      CONNECT_REST_PORT: 8082
+      CONNECT_GROUP_ID: kafka-connect-test
+      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs-test
+      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets-test
+      CONNECT_STATUS_STORAGE_TOPIC: _connect-status-test
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://localhost:8081'
+      CONNECT_REST_ADVERTISED_HOST_NAME: "localhost"
+      CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: "[%d] %p %X{connector.context}%m (%c:%L)%n"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_PARTITIONS: "25"
+      CONNECT_STATUS_STORAGE_PARTITIONS: "5"
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/data/connect-jars
+    volumes:
+      - $PWD/data/connect-jars/:/usr/share/java/kafka-connect-jdbc/jars/
+      - $PWD/jmx:/usr/app/
+      
+  kafka-connect-2:
+    image: confluentinc/cp-kafka-connect-base:6.0.1
+    container_name: kafka-connect-2
+    network_mode: "host"
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: "localhost:9092,localhost:29092"
+      CONNECT_REST_PORT: 8084
+      CONNECT_GROUP_ID: kafka-connect-test
+      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs-test
+      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets-test
+      CONNECT_STATUS_STORAGE_TOPIC: _connect-status-test
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: 'http://localhost:8081'
+      CONNECT_REST_ADVERTISED_HOST_NAME: "localhost"
+      CONNECT_LOG4J_APPENDER_STDOUT_LAYOUT_CONVERSIONPATTERN: "[%d] %p %X{connector.context}%m (%c:%L)%n"
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
+      CONNECT_OFFSET_STORAGE_PARTITIONS: "25"
+      CONNECT_STATUS_STORAGE_PARTITIONS: "5"
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/data/connect-jars
+    volumes:
+      - $PWD/data/connect-jars/:/usr/share/java/kafka-connect-jdbc/jars/
+      - $PWD/jmx:/usr/app/

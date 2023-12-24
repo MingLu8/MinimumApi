@@ -8,7 +8,7 @@ namespace MinimumApi.Routes
     public static class KafkaRoutes
     {
         
-        public static void AddKafkaRoutes(this WebApplication app)
+        public static void UseKafkaRoutes(this WebApplication app)
         {           
             var customerRoutes = app.MapGroup("kafka").WithTags("kafka");
             customerRoutes.MapPost("/produce", ProduceMessage);
@@ -26,14 +26,13 @@ namespace MinimumApi.Routes
             var logger = loggerFactory.CreateLogger("ConsumeMessageLogger");
             consumer.Subscribe(topic);
             
-            var results = new List<ConsumeResult<Ignore, string>>();
             while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
                     var consumeResult = consumer.Consume(cancellationToken);
                     logger.LogInformation(consumeResult?.Message.Value);
-                    consumer.StoreOffset(consumeResult);
+                    consumer.StoreOffset(consumeResult);  //at-least once delivery model
                 }
                 catch (Exception ex)
                 {

@@ -13,7 +13,7 @@ namespace MinimumApi.Routes
 {
     public static class PersonRoutes
     {
-        public static void AddPersonRoutes(this WebApplication app)
+        public static void UsePersonRoutes(this WebApplication app)
         {           
             var customerRoutes = app.MapGroup("people").WithTags("person");
             customerRoutes.MapGet("/", GetAllPeopleAsync);

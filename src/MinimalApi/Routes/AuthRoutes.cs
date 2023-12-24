@@ -8,7 +8,7 @@ namespace MinimimApi.Routers
 {
     public static class AuthRoutes
     {
-        public static void AddAuthRoutes(this WebApplication app)
+        public static void UseAuthRoutes(this WebApplication app)
         {
             app.MapGet("/auth", () =>
             {

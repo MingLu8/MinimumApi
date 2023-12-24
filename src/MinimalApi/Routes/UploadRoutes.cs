@@ -2,7 +2,7 @@ namespace MinimimApi.Routers
 {
     public static class UploadRoutes
     {
-        public static void AddUploadRoutes(this WebApplication app)
+        public static void UseUploadRoutes(this WebApplication app)
         {
             var uploadDir = $"{app.Environment.ContentRootPath}/uploads";
             if(!Directory.Exists(uploadDir))

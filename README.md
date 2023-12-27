@@ -28,7 +28,7 @@ This is ASP.NET Core 8 Minimum API template project containing sample codes for:
 - Integraton Tests *
 - RepoDb (https://repodb.net/tutorial/get-started-sqlserver)  *
 - RepoDb with Sqlite *
-- Kafka Producer and Consumer *
+- Kafka Producer and Consumer, can handle different schema version, without using schema register. *
 - Use Dapper
 - Use Record type for Database object
 - GraphQL

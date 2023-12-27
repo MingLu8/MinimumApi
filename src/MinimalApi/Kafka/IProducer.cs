@@ -2,8 +2,8 @@
 
 namespace MinimumApi.Kafka
 {
-    public interface IProducer
+    public interface IProducer<TKey, TValue>
     {
-        Task<DeliveryResult<long, string>> PublishAsync(string topic, Message<long, string> message);
+        Task<DeliveryResult<TKey, TValue>> PublishAsync(string topic, Message<TKey, TValue> message);
     }
 }

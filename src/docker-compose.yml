@@ -26,17 +26,17 @@ services:
     image: confluentinc/ksqldb-server:0.15.0
     hostname: ksqldb-server-connect-test
     container_name: ksqldb-server-connect-test
-    #ports:
-    #  - "8088:8088"
+    ports:
+      - 28088:8088
     network_mode: "host"
     environment:
       KSQL_KSQL_SERVICE_ID: "default_"
       KSQL_LISTENERS: http://0.0.0.0:8088
-      KSQL_BOOTSTRAP_SERVERS: localhost:9092,localhost:29092
+      KSQL_BOOTSTRAP_SERVERS: localhost:9092,localhost:29092,localhost:8088,,localhost:28088
       KSQL_KSQL_LOGGING_PROCESSING_STREAM_AUTO_CREATE: "true"
       KSQL_KSQL_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: "true"
       KSQL_KSQL_SCHEMA_REGISTRY_URL: http://localhost:8081
-      #KSQL_KSQL_CONNECT_URL: http://localhost:8083
+      KSQL_KSQL_CONNECT_URL: http://localhost:8083
       
   ksqldb-cli-connect-test:
     image: confluentinc/ksqldb-cli:0.15.0
@@ -51,8 +51,8 @@ services:
     image: confluentinc/cp-schema-registry:6.0.1
     container_name: schema-registry-connect-test
     network_mode: "host"
-    #ports:
-    #  - "8081:8081"
+    ports:
+      - 28081:8081
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: localhost:9092,localhost:29092

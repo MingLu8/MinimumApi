@@ -1,7 +1,7 @@
-﻿using Confluent.Kafka;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using MinimumApi.Entities;
 using MinimumApi.Kafka;
-using System.Threading;
+using System.Text.Json;
 
 namespace MinimumApi.Routes
 {
@@ -15,13 +15,13 @@ namespace MinimumApi.Routes
             customerRoutes.MapPost("/consume", ConsumeMessage);          
         }       
 
-        private async static Task<IResult> ProduceMessage(string topic, string message, IProducer producer)
+        private async static Task<IResult> ProduceMessage(string topic, Person person, IProducer<Guid, Person> producer)
         {
-            var result = await producer.PublishAsync(topic, new Message<long, string> { Key = DateTime.Now.Ticks, Value = message});
+            var result = await producer.PublishAsync(topic, new Confluent.Kafka.Message<Guid, Person> { Key = person.CompanyId, Value = person});
             return TypedResults.Ok(result);
         }
                 
-        private static IResult ConsumeMessage(string topic, IConsumer consumer, CancellationToken cancellationToken, ILoggerFactory loggerFactory)
+        private static IResult ConsumeMessage(string topic, IConsumer<Guid, Person> consumer, CancellationToken cancellationToken, ILoggerFactory loggerFactory)
         {
             var logger = loggerFactory.CreateLogger("ConsumeMessageLogger");
             consumer.Subscribe(topic);
@@ -30,9 +30,11 @@ namespace MinimumApi.Routes
             {
                 try
                 {
-                    var consumeResult = consumer.Consume(cancellationToken);
-                    logger.LogInformation(consumeResult?.Message.Value);
-                    consumer.StoreOffset(consumeResult);  //at-least once delivery model
+                    var consumeResult = consumer.Consume(cancellationToken, result =>
+                    {
+                        logger.LogInformation(JsonSerializer.Serialize(result?.Message.Value));
+                        //do message processing
+                    });
                 }
                 catch (Exception ex)
                 {

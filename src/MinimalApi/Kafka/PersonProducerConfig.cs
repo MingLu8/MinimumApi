@@ -6,5 +6,7 @@ namespace MinimumApi.Kafka
     {
         public ProducerConfig ProducerConfig { get; set; }
         public int SchemaVersion { get; set; }
+        public string Topic { get; set; }
+
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Confluent.Kafka;
-using HotChocolate.Types.Relay;
 using System.Text;
 
 namespace MinimumApi.Kafka

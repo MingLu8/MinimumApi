@@ -14,13 +14,13 @@ namespace MinimumApi.Kafka
             var personConsumerConfig = new PersonConsumerConfig();
             builder.Configuration.Bind("PersonConsumerConfig", personConsumerConfig);
             builder.Services.AddSingleton(_ => personConsumerConfig);
-            builder.Services.AddSingleton<IConsumer<Guid, Person>, PersonConsumer>();
+            builder.Services.AddSingleton<IGenericConsumer<Guid, Person>, PersonConsumer>();
 
 
             var personProducerConfig = new PersonProducerConfig();
             builder.Configuration.Bind("PersonProducerConfig", personProducerConfig);
             builder.Services.AddSingleton(_ => personProducerConfig);
-            builder.Services.AddSingleton<IProducer<Guid, Person>, PersonProducer>();
+            builder.Services.AddSingleton<IGenericProducer<Guid, Person>, PersonProducer>();
             return builder;
         }
 

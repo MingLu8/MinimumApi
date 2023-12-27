@@ -1,9 +1,8 @@
 ﻿using Confluent.Kafka;
-using MinimumApi.Entities;
 
 namespace MinimumApi.Kafka
 {
-    public interface IConsumer<TKey, TValue>
+    public interface IGenericConsumer<TKey, TValue>
     {
         void Subscribe(string topic);
         void Unsubscribe();

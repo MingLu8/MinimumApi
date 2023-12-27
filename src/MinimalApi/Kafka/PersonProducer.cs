@@ -3,11 +3,11 @@ using MinimumApi.Entities;
 
 namespace MinimumApi.Kafka
 {
-    public class PersonProducer(PersonProducerConfig config) : IProducer<Guid, Person>, IDisposable
+    public class PersonProducer(PersonProducerConfig config) : IGenericProducer<Guid, Person>, IDisposable
     {
-        private Confluent.Kafka.IProducer<Guid, Person> _producer;
-        private byte[] _schemaVersion = BitConverter.GetBytes(1);
-        private Confluent.Kafka.IProducer<Guid, Person> KafkaProducer => _producer ??= new ProducerBuilder<Guid, Person>(config.ProducerConfig)
+        private IProducer<Guid, Person> _producer;
+        private byte[] _schemaVersion = BitConverter.GetBytes(config.SchemaVersion);
+        private IProducer<Guid, Person> KafkaProducer => _producer ??= new ProducerBuilder<Guid, Person>(config.ProducerConfig)
                 .SetKeySerializer(new GuidSerializer())
                 .SetValueSerializer(new PersonSerializer())
                 .SetLogHandler((_, message) =>
@@ -20,7 +20,9 @@ namespace MinimumApi.Kafka
             if(message.Headers == null)
                 message.Headers = new Headers();
 
-            message.Headers.Add("SchemaVersion", _schemaVersion);
+            if(!message.Headers.Any(a=> string.Compare(a.Key, "SchemaVersion", true) == 0))
+                message.Headers.Add("SchemaVersion", _schemaVersion);
+
             return KafkaProducer.ProduceAsync(topic, message);
         }
 

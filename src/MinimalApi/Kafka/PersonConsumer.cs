@@ -3,10 +3,10 @@ using MinimumApi.Entities;
 
 namespace MinimumApi.Kafka
 {
-    public class PersonConsumer(PersonConsumerConfig config) : IConsumer<Guid, Person>
+    public class PersonConsumer(PersonConsumerConfig config) : IGenericConsumer<Guid, Person>
     {
-        private Confluent.Kafka.IConsumer<Guid, Person> _consumer;
-        private Confluent.Kafka.IConsumer<Guid, Person> KafkaConsumer => _consumer ??= new ConsumerBuilder<Guid, Person>(config.ConsumerConfig)
+        private IConsumer<Guid, Person> _consumer;
+        private IConsumer<Guid, Person> KafkaConsumer => _consumer ??= new ConsumerBuilder<Guid, Person>(config.ConsumerConfig)
             
              .SetKeyDeserializer(new GuidDeserializer())
              .SetValueDeserializer(new PersonDeserializer())
@@ -15,6 +15,8 @@ namespace MinimumApi.Kafka
         public ConsumeResult<Guid, Person> Consume(int timeoutInMillisecnonds, Action<ConsumeResult<Guid, Person>> onConsume)
         {
             var result = KafkaConsumer.Consume(timeoutInMillisecnonds);
+            if (result == null)
+                throw new Exception("Polling person topic timed out.");
             ProcessResult(onConsume, result);
             return result;
         }

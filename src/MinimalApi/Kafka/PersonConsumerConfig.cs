@@ -6,5 +6,6 @@ namespace MinimumApi.Kafka
     {
         public ConsumerConfig ConsumerConfig { get; set; }
         public List<int>? CompatibleSchemaVersions { get; set; }
+        public string Topic {  get; set; }
     }
 }

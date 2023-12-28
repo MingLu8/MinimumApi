@@ -1,7 +1,9 @@
 ﻿using Confluent.Kafka;
+using GreenDonut;
 using Microsoft.Extensions.Logging;
 using MinimumApi.Entities;
 using MinimumApi.Kafka;
+using System.Data.SqlTypes;
 using System.Text.Json;
 using static Confluent.Kafka.ConfigPropertyNames;
 
@@ -9,26 +11,19 @@ namespace MinimumApi.Routes
 {
     public static class KafkaRoutes
     {
-        private static CancellationToken _cancellationtoken;
+        private static CancellationTokenSource _cancellationtoken;
 
         public static void UseKafkaRoutes(this WebApplication app)
         {           
             var customerRoutes = app.MapGroup("kafka").WithTags("kafka");
             customerRoutes.MapPost("/produce", ProduceMessage);
             customerRoutes.MapPost("/consume", ConsumeMessage);
-            customerRoutes.MapPost("/subscribe", SubscribeToTopic);
-            customerRoutes.MapPost("/unsubscribe", UnsubscribeToTopic);          
+            customerRoutes.MapPost("/stop-consume", StopConsume);
         }
-
-        private static Task UnsubscribeToTopic(IGenericConsumer<Guid, Person> consumer)
+  
+        private static Task StopConsume()
         {
-            consumer.Unsubscribe();
-            return Task.CompletedTask;
-        }
-
-        private static Task SubscribeToTopic(IGenericConsumer<Guid, Person> consumer, PersonConsumerConfig config)
-        {
-            consumer.Subscribe(config.Topic);
+            _cancellationtoken.Cancel();
             return Task.CompletedTask;
         }
 
@@ -47,33 +42,35 @@ namespace MinimumApi.Routes
             return TypedResults.Ok(result);
         }
                 
-        private static IResult ConsumeMessage(IGenericConsumer<Guid, Person> consumer, CancellationToken cancellationToken, ILoggerFactory loggerFactory)
+        private static IResult ConsumeMessage(IGenericConsumer<Guid, Person> consumer, ILoggerFactory loggerFactory, PersonConsumerConfig config)
         {
+            _cancellationtoken = new CancellationTokenSource();
+            consumer.Subscribe(config.Topic);
             var logger = loggerFactory.CreateLogger("ConsumeMessageLogger");
-            ConsumeResult<Guid, Person> consumeResult = null;
-            var processed = false;
-            //while (!cancellationToken.IsCancellationRequested)
-            //{
+            var results = new List<Tuple<bool, ConsumeResult<Guid, Person>>>();
+           
+            while (!_cancellationtoken.IsCancellationRequested)
+            {
                 try
                 {
-                    //var consumeResult = consumer.Consume(cancellationToken, result =>
-                    consumeResult = consumer.Consume(10000, result =>
+                    var processed = false;
+                    var consumeResult = consumer.Consume(10000, result =>
                     {
                         logger.LogInformation(JsonSerializer.Serialize(result?.Message.Value));
                         processed = true;
                         //do message processing
                     });
+                    results.Add(new Tuple<bool, ConsumeResult<Guid, Person>>(processed, consumeResult));
                 }
                 catch (Exception ex)
                 {
                     logger.LogError($"consumer.Consume failed: {ex.Message}.");
                 }
-            //}
+            }
 
-            //if(cancellationToken.IsCancellationRequested)
-            //    logger.LogInformation("Consume message cancelled.");
+            consumer.Unsubscribe();
 
-            return TypedResults.Ok(new { schemaVersion = consumeResult.GetSchemaVersion(), processed, person = consumeResult.Message.Value });
+            return TypedResults.Ok(results.Select(a=>new { schemaVersion = a.Item2.GetSchemaVersion(), processed = a.Item1, person = a.Item2.Message.Value }));
         }      
     }
 }

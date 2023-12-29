@@ -1,6 +1,6 @@
 ﻿using Confluent.Kafka;
 
-namespace MinimumApi.Kafka
+namespace MinimumApi.Kafka.Core
 {
     public interface IGenericConsumer<TKey, TValue>
     {

@@ -9,7 +9,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MinimimApi.Routers;
-using MinimumApi.Kafka;
+using MinimumApi.Entities;
+using MinimumApi.Kafka.Core;
 using MinimumApi.Middlewares;
 using MinimumApi.Repositories;
 using MinimumApi.Routes;
@@ -84,7 +85,8 @@ builder.Services.AddAuthorizationBuilder()
             .RequireClaim("scope", "greetings_api"));;
 
 builder.Services.AddAntiforgery();
-builder.AddKafka();
+
+builder.ConfigKafka();
 
 //var connectionString = builder.Configuration.GetConnectionString("minimalApiMsSQL");
 //builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
@@ -124,6 +126,7 @@ if (app.Environment.IsDevelopment())
 
 app.UsePersonRoutes();
 app.UseKafkaRoutes();
+app.UseRoutePointsRoutes();
 app.UseHealthCheckRoutes();
 app.UseAuthRoutes();
 app.UseUploadRoutes();

@@ -1,12 +1,8 @@
-﻿using Confluent.Kafka;
+﻿using MinimumApi.Entities;
+using MinimumApi.Kafka.Core;
 
 namespace MinimumApi.Kafka
 {
-    public class PersonProducerConfig
-    {
-        public ProducerConfig ProducerConfig { get; set; }
-        public int SchemaVersion { get; set; }
-        public string Topic { get; set; }
 
-    }
+    public class PersonProducerConfig : GenericProducerConfig { }
 }

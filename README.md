@@ -29,7 +29,7 @@ This is ASP.NET Core 8 Minimum API template project containing sample codes for:
 - RepoDb (https://repodb.net/tutorial/get-started-sqlserver)  *
 - RepoDb with Sqlite *
 - Kafka Producer and Consumer, can handle different schema version, without using schema register. *
-- Kafka Event Streaming
+- Kafka Event Streaming, TPL DataFlow Data Processing Pipeline
 - Redis
 - Elastic Search
 - Algolia

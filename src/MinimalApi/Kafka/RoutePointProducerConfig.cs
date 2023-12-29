@@ -3,8 +3,5 @@ using MinimumApi.Kafka.Core;
 
 namespace MinimumApi.Kafka
 {
-    public class PersonConsumerConfig : GenericConsumerConfig
-    {
-    
-    }
+    public class RoutePointProducerConfig : GenericProducerConfig { }
 }

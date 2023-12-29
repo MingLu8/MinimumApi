@@ -1,15 +1,12 @@
 ﻿using Confluent.Kafka;
-using GreenDonut;
-using Microsoft.Extensions.Logging;
 using MinimumApi.Entities;
 using MinimumApi.Kafka;
-using System.Data.SqlTypes;
+using MinimumApi.Kafka.Core;
 using System.Text.Json;
-using static Confluent.Kafka.ConfigPropertyNames;
 
 namespace MinimumApi.Routes
 {
-    public static class KafkaRoutes
+    public static class KafkaPersonRoutes
     {
         private static CancellationTokenSource _cancellationtoken;
 
@@ -27,7 +24,7 @@ namespace MinimumApi.Routes
             return Task.CompletedTask;
         }
 
-        private async static Task<IResult> ProduceMessage(int? schemaVersion,  Person person, IGenericProducer<Guid, Person> producer, PersonConsumerConfig config)
+        private async static Task<IResult> ProduceMessage(int? schemaVersion,  Person person, IPersonProducer producer, PersonConsumerConfig config)
         {
             var message = new Message<Guid, Person> { Key = person.CompanyId, Value = person };
             if(schemaVersion.HasValue)
@@ -42,7 +39,7 @@ namespace MinimumApi.Routes
             return TypedResults.Ok(result);
         }
                 
-        private static IResult ConsumeMessage(IGenericConsumer<Guid, Person> consumer, ILoggerFactory loggerFactory, PersonConsumerConfig config)
+        private static IResult ConsumeMessage(IPersonConsumer consumer, ILoggerFactory loggerFactory, PersonConsumerConfig config)
         {
             _cancellationtoken = new CancellationTokenSource();
             consumer.Subscribe(config.Topic);

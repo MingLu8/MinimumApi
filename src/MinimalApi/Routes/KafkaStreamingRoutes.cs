@@ -24,12 +24,13 @@ namespace MinimumApi.Routes
             var driverId = Guid.NewGuid().ToString();
             var latitude = new Random().Next(100000, 1000000);
             var longitude = new Random().Next(100000, 1000000);
-            while (simulateCount > 0)
+            var count = 0;
+            while (count < simulateCount)
             {
-                simulateCount--;
+                count++;
                 latitude += new Random().Next(0, 10);
                 longitude += new Random().Next(0, 10);
-                var routePoint = new RoutePoint { RouteId = routeId, DriverId = driverId, Latitude = latitude, Longitude = longitude };
+                var routePoint = new RoutePoint { SequenceNumber = count, Time= DateTime.UtcNow, RouteId = routeId, DriverId = driverId, Latitude = latitude, Longitude = longitude };
                 var message = new Message<string, RoutePoint> { Key = routeId, Value = routePoint };
                 await producer.PublishAsync(config.Topic, message);
             }

@@ -69,3 +69,10 @@ Run SQL-Server in Windows Docker Container: https://theserogroup.com/sql-server/
 https://benfoster.io/blog/minimal-api-validation-endpoint-filters/
 https://khalidabuhakmeh.com/minimal-api-validation-with-fluentvalidation
 https://dotnetthoughts.net/working-model-validation-in-minimal-api/
+
+# Setting Kibana for ElasticSearch
+- run this to get enrollment token: `docker exec -it elasticsearch ./bin/elasticsearch-create-enrollment-token --scope kibana` 
+- go to `http://localhost:5601/`, and paste the enrollment token, it should ask for verification code
+- run this to get verification code: `docker exec -it kibana  ./bin/kibana-verification-code`
+- then login with username: `elastic` and password: `MagicWord`
+- to use dev tools, go to http://localhost:5601/app/dev_tools#/console

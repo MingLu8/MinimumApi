@@ -76,3 +76,8 @@ https://dotnetthoughts.net/working-model-validation-in-minimal-api/
 - run this to get verification code: `docker exec -it kibana  ./bin/kibana-verification-code`
 - then login with username: `elastic` and password: `MagicWord`
 - to use dev tools, go to http://localhost:5601/app/dev_tools#/console
+
+# Connect mssql running in docker: 
+server name: 127.0.0.1,1433
+userId: sa
+password: password123

@@ -81,3 +81,6 @@ https://dotnetthoughts.net/working-model-validation-in-minimal-api/
 server name: 127.0.0.1,1433
 userId: sa
 password: password123
+
+# Connect to mongodb using uri: 
+`mongodb://test:test@localhost:27017/admin?retryWrites=true&loadBalanced=false&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-1`

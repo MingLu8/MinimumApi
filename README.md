@@ -82,5 +82,12 @@ server name: 127.0.0.1,1433
 userId: sa
 password: password123
 
-# Connect to mongodb using uri: 
+# Connect to mongodb using Robo 3T with uri: 
 `mongodb://test:test@localhost:27017/admin?retryWrites=true&loadBalanced=false&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-1`
+
+# Connect to redis:
+install RedisInsight
+then set the following settings:
+Host: 127.0.0.1
+Port: 6379
+Password: test

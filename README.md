@@ -81,7 +81,7 @@ https://dotnetthoughts.net/working-model-validation-in-minimal-api/
 server name: 127.0.0.1,1433
 userId: sa
 password: password123
-
+- to run the application with Sql Server change the `database` configuration value to `sqlServer`, then the create sql server database with userId: sa, password: password123 on the swagger page.
 # Connect to mongodb using Robo 3T with uri: 
 `mongodb://test:test@localhost:27017/admin?retryWrites=true&loadBalanced=false&connectTimeoutMS=10000&authSource=admin&authMechanism=SCRAM-SHA-1`
 

@@ -39,7 +39,7 @@ namespace MinimumApi.Extensions
     /// </summary>
     /// <param name="connectionString"></param>
     /// <param name="initScriptFileName">script file default to the same directory as the sqlite database file directory.</param>
-    public static void CreateSQLiteDatabaseIfNotExists(this WebApplication app, string connectionString, string? initScriptFileName = null)
+    public static void CreateSQLiteDatabaseIfNotExists(string connectionString, string? initScriptFileName = null)
     {
       var csBuilder = new SQLiteConnectionStringBuilder(connectionString);
       if (File.Exists(csBuilder.DataSource)) return;
@@ -48,8 +48,7 @@ namespace MinimumApi.Extensions
 
       if (initScriptFileName == null) return;
       
-      using var scope = app.Services.CreateScope();
-      var connection = scope.ServiceProvider.GetService<IDbConnection>();
+      var connection = new SQLiteConnection(connectionString);
       if (!File.Exists(initScriptFileName))
         initScriptFileName = Path.Combine(Directory.GetParent(csBuilder.DataSource).FullName, initScriptFileName);
 
@@ -58,46 +57,66 @@ namespace MinimumApi.Extensions
       
     }
 
-    public static void CreateSqlServerDatabaseIfNotExists(this WebApplication app, string connectionString, string? initScriptFileName = null)
+    public static void CreateSqlServerDatabaseIfNotExists(string connectionString, string adminUser, string adminPassword, string? initScriptFileName = null)
     {
-      //using var scope = app.Services.CreateScope();
       var csBuilder = new SqlConnectionStringBuilder(connectionString);
-      //var csServerBuilder = new SqlConnectionStringBuilder();
-      //csServerBuilder.DataSource = csBuilder.DataSource;
-      //csServerBuilder.UserID = csBuilder.UserID;
-      //csServerBuilder.Password = csBuilder.Password;
-      //csServerBuilder.TrustServerCertificate = csBuilder.TrustServerCertificate;
 
-      //using var serverConnection = new SqlConnection(csServerBuilder.ConnectionString);
+      var masterConnectionString = CreateMasterDatabaseConnectionString(csBuilder.DataSource, csBuilder.TrustServerCertificate, adminUser, adminPassword);
+      using var serverConnection = new SqlConnection(masterConnectionString);
 
-      //var sql = string.Format("SELECT database_id FROM sys.databases WHERE Name = '{0}'", csBuilder.InitialCatalog);
-      //var exists = serverConnection.ExecuteScalar<int>(sql) > 0;
-      //if (exists) return;
+      if (IsDatabaseExisted(csBuilder, serverConnection)) return;
 
-      //var sqlCreate = $"CREATE DATABASE [{csBuilder.InitialCatalog}]";
-      //serverConnection.ExecuteNonQuery(sql);
+      CreateDatabaseAndLogin(serverConnection, csBuilder.UserID, csBuilder.Password, csBuilder.InitialCatalog);
 
-      //// serverConnection.ExecuteNonQuery($"CREATE LOGIN {csBuilder.UserID} WITH PASSWORD = '{csBuilder.Password}'");
-      //var createUserSql = $@"     
-      //  IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = N'{csBuilder.UserID}')
-      //  BEGIN
-      //      CREATE USER {csBuilder.UserID} FOR LOGIN {csBuilder.UserID}
-      //      EXEC sp_addrolemember N'db_owner', N'{csBuilder.UserID}'
-      //      EXEC master..sp_addsrvrolemember @loginame = N'{csBuilder.UserID}', @rolename = N'sysadmin'
-      //  END;
-      //";
+      AddUserRole(masterConnectionString, csBuilder.UserID, csBuilder.InitialCatalog);
+      SeedDatabase(connectionString, initScriptFileName);
+    }
 
-      //serverConnection.ExecuteNonQuery(createUserSql);
+    private static string CreateMasterDatabaseConnectionString(string dataSource, bool trustServerCeritificate, string adminUser, string adminPassword)
+    {
+      var csServerBuilder = new SqlConnectionStringBuilder();
+      csServerBuilder.DataSource = dataSource;
+      csServerBuilder.UserID = adminUser;
+      csServerBuilder.Password = adminPassword;
+      csServerBuilder.InitialCatalog = "master";
+      csServerBuilder.TrustServerCertificate = trustServerCeritificate;
+      return csServerBuilder.ConnectionString;
+    }
+
+    private static bool IsDatabaseExisted(SqlConnectionStringBuilder csBuilder, SqlConnection serverConnection)
+    {
+      var sql = string.Format("SELECT database_id FROM sys.databases WHERE Name = '{0}'", csBuilder.InitialCatalog);
+      var exists = serverConnection.ExecuteScalar<int>(sql) > 0;
+      return exists;
+    }
+
+    private static void CreateDatabaseAndLogin(SqlConnection connection, string userId, string password, string database)
+    {
+      var sqlCreate = $"CREATE DATABASE [{database}]";
+      var result = connection.ExecuteNonQuery(sqlCreate);
+
+      string sqlCreateDBQuery = $"CREATE LOGIN [{userId}] WITH PASSWORD='{password}', CHECK_POLICY=OFF, DEFAULT_DATABASE={database}, DEFAULT_LANGUAGE=[English];";
+      result = connection.ExecuteNonQuery(sqlCreateDBQuery);
+    }
+
+    private static void AddUserRole(string connectionString, string userLogin, string targetDatabase)
+    {
+      var csBuilder = new SqlConnectionStringBuilder(connectionString);
+      csBuilder.InitialCatalog = targetDatabase;
+
+      var userToRole = "userToRole";
+      using var connection = new SqlConnection(csBuilder.ConnectionString);
+      string sqlCreateDBUserQuery = $"CREATE USER {userToRole} FROM LOGIN {userLogin}";
+      connection.ExecuteNonQuery(sqlCreateDBUserQuery);
+
+      string sqlAddUserRole = $"EXEC sp_addrolemember 'db_owner', {userToRole}";
 
 
+      connection.ExecuteNonQuery(sqlAddUserRole);
+    }
 
-
-      CreateNewDatabaseSqlserver(csBuilder.DataSource, csBuilder.InitialCatalog, "sa", "password123");
-      CreateLoginInSqlServer(csBuilder.DataSource, "sa", "password123", csBuilder.UserID, "password123");
-      CreateUserInDatabase(csBuilder.DataSource, "sa", "password123", csBuilder.InitialCatalog, "User1", csBuilder.UserID);
-      //AddUserToRoles(csBuilder.DataSource, "sa", "password123", csBuilder.InitialCatalog, "db_datareader", "User1");
-      //AddUserToRoles(csBuilder.DataSource, "sa", "password123", csBuilder.InitialCatalog, "db_datawriter", "User1");
-      AddUserToRoles(csBuilder.DataSource, "sa", "password123", csBuilder.InitialCatalog, "db_owner", "User1");
+    private static void SeedDatabase(string connectionString, string? initScriptFileName)
+    {
       using var connection = new SqlConnection(connectionString);
       if (initScriptFileName == null) return;
 

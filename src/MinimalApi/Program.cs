@@ -90,15 +90,24 @@ builder.Services.AddAntiforgery();
 
 builder.ConfigKafka();
 
-var sqlServerConnectionString = builder.Configuration.GetConnectionString("minimalApiMsSQL");
-builder.Services.AddKeyedScoped<IDbConnection>("sqlServer", (_, _) => new SqlConnection(sqlServerConnectionString));
-
-var sqliteConnectionString = builder.Configuration.GetConnectionString("minimalApiSqlLite");
-builder.Services.AddKeyedScoped<IDbConnection>("sqlite", (_, _) => new SQLiteConnection(sqliteConnectionString));
+var database = builder.Configuration.GetValue<string>("database");
+if(database == null || database == "sqlite")
+{
+  var sqliteConnectionString = builder.Configuration.GetConnectionString("minimalApiSqlLite");
+  builder.Services.AddScoped<IDbConnection>(_ => new SQLiteConnection(sqliteConnectionString));
+  builder.Services.AddScoped<IPersonRepository, PersonSqliteRepository>();
+}
+else if(database == "sqlServer")
+{
+  var sqlServerConnectionString = builder.Configuration.GetConnectionString("minimalApiMsSQL");
+  builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(sqlServerConnectionString));
+  builder.Services.AddScoped<IPersonRepository, PersonSqlServerRepository>();
+}
 
 
 builder.Services.AddScoped<IPersonService, PersonService>();
-builder.Services.AddScoped<IPersonRepository, PersonRepoDbRepository>();
+
+
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
@@ -141,13 +150,12 @@ app.UseRoutePointsRoutes();
 app.UseHealthCheckRoutes();
 app.UseAuthRoutes();
 app.UseUploadRoutes();
+app.UseDatabaseRoutes();
 
-GlobalConfiguration
-    .Setup()
-    .UseSqlServer()
-    .UseSQLite();
-app.CreateSQLiteDatabaseIfNotExists(sqliteConnectionString, "baseline-sqlite.sql");
-app.CreateSqlServerDatabaseIfNotExists(sqlServerConnectionString, @".\Data\baseline.sql");
+if(database ==  null || database == "sqlite")
+    GlobalConfiguration.Setup().UseSQLite();
+else if(database == "sqlServer")
+  GlobalConfiguration.Setup().UseSqlServer();
 
 app.Run();
 

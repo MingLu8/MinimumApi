@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using MinimimApi.Routers;
 using MinimumApi.Entities;
+using MinimumApi.Extensions;
 using MinimumApi.Kafka.Core;
 using MinimumApi.Middlewares;
 using MinimumApi.Repositories;
@@ -18,6 +19,7 @@ using MinimumApi.Services;
 using MinimumApi.Validators;
 using RepoDb;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 
 
@@ -88,17 +90,21 @@ builder.Services.AddAntiforgery();
 
 builder.ConfigKafka();
 
-//var connectionString = builder.Configuration.GetConnectionString("minimalApiMsSQL");
-//builder.Services.AddScoped<IDbConnection>(_ => new SqlConnection(connectionString));
+var sqlServerConnectionString = builder.Configuration.GetConnectionString("minimalApiMsSQL");
+builder.Services.AddKeyedScoped<IDbConnection>("sqlServer", (_, _) => new SqlConnection(sqlServerConnectionString));
 
-var connectionString = builder.Configuration.GetConnectionString("minimalApiSqlLite");
-builder.Services.AddScoped<IDbConnection>(_ => new SQLiteConnection(connectionString));
+var sqliteConnectionString = builder.Configuration.GetConnectionString("minimalApiSqlLite");
+builder.Services.AddKeyedScoped<IDbConnection>("sqlite", (_, _) => new SQLiteConnection(sqliteConnectionString));
+
 
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IPersonRepository, PersonRepoDbRepository>();
 
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents()
+    .AddInteractiveWebAssemblyComponents();
 
 var app = builder.Build();
 
@@ -119,11 +125,16 @@ app.UseAntiforgery();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-    //app.UseDeveloperExceptionPage();
+  app.UseWebAssemblyDebugging();
+  app.UseSwagger();
+  app.UseSwaggerUI();
+  app.UseDeveloperExceptionPage();
 }
-
+app.UseHttpsRedirection();
+app.UseBlazorFrameworkFiles();
+app.UseStaticFiles();
+app.UseAntiforgery();
+app.MapFallbackToFile("index.html");
 app.UsePersonRoutes();
 app.UseKafkaRoutes();
 app.UseRoutePointsRoutes();
@@ -133,8 +144,10 @@ app.UseUploadRoutes();
 
 GlobalConfiguration
     .Setup()
-    //.UseSqlServer()
+    .UseSqlServer()
     .UseSQLite();
+app.CreateSQLiteDatabaseIfNotExists(sqliteConnectionString, "baseline-sqlite.sql");
+app.CreateSqlServerDatabaseIfNotExists(sqlServerConnectionString, @".\Data\baseline.sql");
 
 app.Run();
 

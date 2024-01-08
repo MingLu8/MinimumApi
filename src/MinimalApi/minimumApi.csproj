@@ -19,6 +19,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="GraphQL.RepoDb.SqlServer" Version="13.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
     <PackageReference Include="RepoDb.Sqlite.Microsoft" Version="1.13.1" />
     <PackageReference Include="RepoDb.SQLite.System" Version="1.13.1" />
     <PackageReference Include="RepoDb.SqlServer.BulkOperations" Version="1.13.1" />
@@ -28,7 +29,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="uploads\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WebPortal.App\WebPortal.App.csproj" />
   </ItemGroup>
 </Project>

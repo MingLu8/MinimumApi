@@ -3,10 +3,7 @@ using System.Data;
 
 namespace MinimumApi.Repositories
 {
-    public class PersonRepoDbRepository : RepoDbSqlLiteRepository<Person>, IPersonRepository
-    {
-        public PersonRepoDbRepository(IDbConnection connection) : base(connection)
-        {
-        }
-    }
+  public class PersonRepoDbRepository(IServiceProvider ioc) : RepoDbSqlLiteRepository<Person>(connection: ioc.GetKeyedService<IDbConnection>("sqlite")), IPersonRepository
+  {
+  }
 }

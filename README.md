@@ -1,5 +1,3 @@
-### Hello There, I'm currently looking for a job, a Tech Lead, or Development Manager (preferable remote) Here's my [Linkedin](https://linkedin.com/in/minglu8) Profile
-
 
 
 # Common usage code Samples for .Net 8 MinimalApi
